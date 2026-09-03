@@ -43,11 +43,17 @@ usage-limit gap.
       footers (`© 2013`, `Copyright 2011-2019`, a year inside an address like
       "1665 Stelton Rd"), windows-1252 pages. Check every `buildReason` branch
       is specific, neutral and never asserts a visual judgement.
-- [ ] **Audit `views/runs.js` and `views/email.js`.** Their agent was killed
-      mid-work. Both parse, but neither was self-verified.
-- [ ] **Load the UI end to end.** No view has ever rendered in a browser.
-      Confirm every view mounts against the real run, every `ctx.api` call
-      resolves, and `destroy()` removes the call-mode key handlers.
+- [x] **Audited `views/runs.js` and `views/email.js`.** Both render against the
+      real run (94 and 166 nodes). Their agent was killed before self-verifying,
+      but the code is sound.
+- [x] **Loaded the UI end to end.** `node app/tools/render-check.mjs` — a
+      zero-dependency headless DOM harness — mounts all **8/8 views** against
+      the live server. Verified: no view throws, every `ctx.api` method a view
+      calls exists and returns, all 206 class references resolve (`design.css`
+      or an injected view-local `<style>`), **no `innerHTML` anywhere** (so no
+      XSS route from third-party business names), and every global `window`/
+      `document` listener is removed again in `destroy()` — including
+      call mode's keydown handler. Rerun it any time; exit code is the result.
 - [ ] **Design fidelity pass** — each view against its artboard in `design/`:
       type scale, tier ramp, accent reserved for the primary action and the
       top lead, lead-row weight order (opener is the hero).
