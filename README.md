@@ -51,12 +51,29 @@ Writes `data/leads_<niche>-<location>.csv` and `.json`, and appends everything
 it surfaces to `data/seen_leads.csv` so later runs skip businesses already seen.
 Pass `--include-seen` to bring those back for one run.
 
+## The app
+
+All three stages also run as a local tool, with the call list, call mode, call
+history and a cold-email view:
+
+```powershell
+node app/server.mjs        # then open http://127.0.0.1:4173
+```
+
+Nothing to install - no dependencies and no build step. See
+[`app/README.md`](app/README.md). Worth knowing: `scripts/find_businesses.py`
+needs a Python interpreter, and the app does not - `app/lib/apify.mjs` is a port
+of it that reproduces the same tiers. Stage 2, which used to be done by hand
+each run, is real code in `app/lib/sitecheck.mjs`.
+
 ## Layout
 
 ```
-scripts/find_businesses.py       stage 1
+app/                             the local tool (see app/README.md)
+scripts/find_businesses.py       stage 1, original Python version
 references/outdated_signals.md   the scoring rubric for stage 2
 references/workflow.md           full workflow notes
+design/                          the approved UI, as a Claude Design canvas
 data/                            raw search output + seen_leads.csv (call history)
 call-lists/                      finished, ranked call lists
 ```

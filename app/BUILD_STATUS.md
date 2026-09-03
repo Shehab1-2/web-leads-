@@ -66,13 +66,19 @@ usage-limit gap.
       XSS route from third-party business names), and every global `window`/
       `document` listener is removed again in `destroy()` — including
       call mode's keydown handler. Rerun it any time; exit code is the result.
-- [ ] **Design fidelity pass** — each view against its artboard in `design/`:
-      type scale, tier ramp, accent reserved for the primary action and the
-      top lead, lead-row weight order (opener is the hero).
-- [ ] **`app/README.md`** — what it is, `node app/server.mjs`, setting
-      `APIFY_API_TOKEN` on Windows, what works without a token, where data is
-      written.
-- [ ] **Root `README.md`** — add a line pointing at the app.
+- [x] **Design fidelity pass.** Compared every view against its artboard. No
+      colour drift: the only two values outside the shared palette
+      (`#e9e3d7`, `#ddd4c4` in `runs.js`) trace straight to `Runs.dc.html`.
+      The type scale is not re-declared inline — views use the `design.css`
+      classes built from the artboards, so `.title`, `.lead__opener`,
+      `.lead__phone` and the tier ramp are fidelity-by-construction. Accent
+      discipline holds: 0–2 references per view, and the call list gets its
+      accent only through `.pill--no_website` and `.lead--top`, i.e. the
+      primary action and the top-ranked lead.
+- [x] **`app/README.md`** — written: running it, the token on Windows, what
+      works without one, where every file is written, and both checks.
+- [x] **Root `README.md`** — added an "The app" section and put `app/` and
+      `design/` in the layout.
 
 ## Rules that must hold
 
