@@ -196,10 +196,17 @@ async function api(req, res, pathname) {
       isLead: isLead(effectiveTier(l)),
       effectiveTier: effectiveTier(l),
     }));
-    const kept = rankLeads(withStatus.filter((l) => l.isLead));
+    // `leads` carries the whole run, ranked, with each row flagged `isLead` —
+    // the views need the full set to report what was pulled and how many sites
+    // were checked. rankLeads sorts healthy sites to the bottom, and `dropped`
+    // is the same rows again for convenience.
+    const ranked = rankLeads(withStatus);
     const dropped = withStatus.filter((l) => !l.isLead);
     return ok(res, {
-      meta, leads: kept, dropped,
+      meta,
+      leads: ranked,
+      dropped,
+      callable: ranked.filter((l) => l.isLead).length,
       counts: countByTier(leads),
       total: leads.length,
     });
