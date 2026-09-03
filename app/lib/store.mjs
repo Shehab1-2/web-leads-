@@ -17,7 +17,11 @@ import { parseCsvObjects, toCsv } from './csv.mjs';
 // fileURLToPath, not url.pathname — on Windows the latter yields "/C:/..." and
 // leaves %20 in any path with a space in it.
 export const ROOT = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
-export const DATA_DIR = path.join(ROOT, 'data');
+// Every path below hangs off DATA_DIR, so pointing it at a mounted volume is
+// all it takes to outlive a redeploy on a host with an ephemeral disk. Unset,
+// it is the repo's own data/ — which is what running this at a desk wants.
+export const REPO_DATA_DIR = path.join(ROOT, 'data');
+export const DATA_DIR = path.resolve((process.env.DATA_DIR || '').trim() || REPO_DATA_DIR);
 export const RUNS_DIR = path.join(DATA_DIR, 'runs');
 export const CHECKS_DIR = path.join(DATA_DIR, 'checks');
 export const SEEN_PATH = path.join(DATA_DIR, 'seen_leads.csv');
@@ -54,6 +58,22 @@ async function writeAtomic(filePath, contents) {
 async function readCsvObjects(filePath) {
   if (!(await exists(filePath))) return { header: [], rows: [] };
   return parseCsvObjects(await fs.readFile(filePath, 'utf8'));
+}
+
+/**
+ * A freshly mounted volume is empty, and an empty DATA_DIR would hide the call
+ * history the repo already carries — repeat searches would then re-surface
+ * businesses already called. Copy the repo's data across once, on first boot
+ * only. Anything already in DATA_DIR is left untouched, so this can never
+ * overwrite history that has moved on.
+ */
+export async function seedDataDir() {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  if (DATA_DIR === REPO_DATA_DIR) return { seeded: false, reason: 'using the repo directory' };
+  if (await exists(SEEN_PATH)) return { seeded: false, reason: 'already has call history' };
+  if (!(await exists(REPO_DATA_DIR))) return { seeded: false, reason: 'nothing to seed from' };
+  await fs.cp(REPO_DATA_DIR, DATA_DIR, { recursive: true, force: false, errorOnExist: false });
+  return { seeded: true, reason: `seeded from ${REPO_DATA_DIR}` };
 }
 
 // ---------------------------------------------------------------- runs

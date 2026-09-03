@@ -66,6 +66,29 @@ needs a Python interpreter, and the app does not - `app/lib/apify.mjs` is a port
 of it that reproduces the same tiers. Stage 2, which used to be done by hand
 each run, is real code in `app/lib/sitecheck.mjs`.
 
+## Deploying it
+
+The app runs unchanged on Railway. `package.json` and `railway.json` are all the
+builder needs; there is still nothing to install.
+
+It binds loopback at a desk and every interface only when it detects a platform
+(`RAILWAY_ENVIRONMENT`), or when `HOST` is set. Set these in the Railway service:
+
+| Variable | Why |
+|---|---|
+| `APP_PASSWORD` | **Set this.** Without it the URL is open to anyone who finds it, and the call list is phone numbers plus the ability to spend your Apify credit. Any username works at the browser prompt; only the password is checked. |
+| `APIFY_API_TOKEN` | Searching is disabled until it is set |
+| `DATA_DIR` | Point at a mounted volume, e.g. `/data` |
+| `INSTANTLY_API_KEY`, `INSTANTLY_CAMPAIGN_ID` | Optional, for the cold-email push |
+
+`PORT` is assigned by the platform - don't set it. `/api/health` is the health
+check and is the one route that answers without the password.
+
+**Attach a volume.** A container's disk is wiped on every redeploy, and
+`data/seen_leads.csv` is call history that must not lose rows. Mount a volume,
+set `DATA_DIR` to its mount path, and the first boot copies the repo's existing
+data across - after that the volume is the only thing written to.
+
 ## Layout
 
 ```

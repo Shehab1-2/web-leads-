@@ -1,0 +1,14 @@
+{
+  "name": "web-leads",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prospecting pipeline for finding local businesses that need a new website",
+  "type": "module",
+  "main": "app/server.mjs",
+  "scripts": {
+    "start": "node app/server.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

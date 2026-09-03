@@ -1,7 +1,9 @@
 // Local HTTP server for the web-leads app.
 //
 // Zero dependencies, node: builtins only. Binds to 127.0.0.1 — this is a tool
-// for one person at a desk, not something to expose.
+// for one person at a desk, not something to expose. On a hosting platform it
+// binds publicly instead, and APP_PASSWORD is the only thing between the call
+// list and whoever finds the URL, so set it there.
 //
 //   node app/server.mjs
 //
@@ -9,6 +11,7 @@
 // the UI can show progress as it happens rather than freezing on a request.
 
 import http from 'node:http';
+import crypto from 'node:crypto';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +25,16 @@ import * as mail from './lib/email.mjs';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(HERE, 'public');
 const DEFAULT_PORT = Number(process.env.PORT) || 4173;
+const PORT_FROM_ENV = Boolean(String(process.env.PORT || '').trim());
+
+// Loopback unless we are demonstrably on a hosting platform, where the router
+// only reaches a container that binds every interface. Setting HOST covers any
+// platform not named here; nothing changes for `node app/server.mjs` at a desk.
+const ON_PLATFORM = Boolean(process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_SERVICE_ID);
+const HOST = (process.env.HOST || '').trim() || (ON_PLATFORM ? '0.0.0.0' : '127.0.0.1');
+
+/** Shared password. Empty means no gate — fine on loopback, reckless in public. */
+const PASSWORD = (process.env.APP_PASSWORD || '').trim();
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -380,11 +393,47 @@ async function api(req, res, pathname) {
   return fail(res, 404, `no such endpoint: ${method} ${pathname}`);
 }
 
+// --------------------------------------------------------------------- auth
+
+/**
+ * Basic auth against APP_PASSWORD. The username is ignored — there is one
+ * operator, and asking them to remember a second field buys nothing. Returns
+ * true unchallenged when no password is configured.
+ */
+function authorized(req) {
+  if (!PASSWORD) return true;
+  const [scheme, encoded] = String(req.headers.authorization || '').split(' ');
+  if (!/^basic$/i.test(scheme || '') || !encoded) return false;
+  let supplied;
+  try {
+    supplied = Buffer.from(encoded, 'base64').toString('utf8').split(':').slice(1).join(':');
+  } catch { return false; }
+  // Compare over a fixed-width digest so length alone cannot be probed.
+  const a = crypto.createHash('sha256').update(supplied).digest();
+  const b = crypto.createHash('sha256').update(PASSWORD).digest();
+  return crypto.timingSafeEqual(a, b);
+}
+
+function challenge(res) {
+  const body = JSON.stringify({ ok: false, error: 'password required' });
+  res.writeHead(401, {
+    'www-authenticate': 'Basic realm="web-leads", charset="UTF-8"',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': Buffer.byteLength(body),
+    'cache-control': 'no-store',
+  });
+  res.end(body);
+}
+
 // ------------------------------------------------------------------- server
 
 const server = http.createServer(async (req, res) => {
   let pathname = '/';
   try { pathname = new URL(req.url, 'http://127.0.0.1').pathname; } catch { /* keep default */ }
+  // Answered before the gate: a platform's health probe carries no credentials,
+  // and a 401 there reads as a failed deploy. Says nothing a stranger can use.
+  if (pathname === '/api/health') return ok(res, { status: 'up' });
+  if (!authorized(req)) return challenge(res);
   try {
     if (pathname.startsWith('/api/')) await api(req, res, pathname);
     else await serveStatic(req, res, pathname);
@@ -395,7 +444,11 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-function listen(port, attemptsLeft = 12) {
+// Locally this stays on the loopback and hops to a free port if 4173 is busy.
+// On a host like Railway, PORT and HOST are assigned and the router only talks
+// to that exact port, so hopping would make the app unreachable — bind what we
+// were given, or fail loudly.
+function listen(port, attemptsLeft = PORT_FROM_ENV ? 0 : 12) {
   server.once('error', (err) => {
     if (err.code === 'EADDRINUSE' && attemptsLeft > 0) {
       listen(port + 1, attemptsLeft - 1);
@@ -404,15 +457,27 @@ function listen(port, attemptsLeft = 12) {
     console.error(`Could not start the server: ${err.message}`);
     process.exit(1);
   });
-  server.listen(port, '127.0.0.1', () => {
-    const c = config();
-    console.log(`web-leads running at http://127.0.0.1:${port}`);
-    console.log(`  Apify token:  ${c.apifyToken ? 'found' : 'NOT set — searching is disabled until you set APIFY_API_TOKEN'}`);
-    console.log(`  Instantly:    ${c.instantly ? 'configured' : 'not configured — the cold-email push is disabled'}`);
-    console.log('  Ctrl-C to stop.');
-  });
+  server.listen(port, HOST);
 }
 
+// Registered once, not per attempt, and reading the port back off the socket:
+// a listen callback passed per attempt survives that attempt failing, so after
+// a port hop every earlier attempt would announce a URL nothing is bound to.
+server.on('listening', () => {
+  const { port } = server.address();
+  const c = config();
+  const shown = HOST === '0.0.0.0' ? `port ${port}` : `http://${HOST}:${port}`;
+  console.log(`web-leads running on ${shown}`);
+  console.log(`  Apify token:  ${c.apifyToken ? 'found' : 'NOT set — searching is disabled until you set APIFY_API_TOKEN'}`);
+  console.log(`  Instantly:    ${c.instantly ? 'configured' : 'not configured — the cold-email push is disabled'}`);
+  console.log(`  Password:     ${PASSWORD ? 'set — the app asks for one' : 'NOT set — anyone who reaches this port gets in'}`);
+  if (HOST === '127.0.0.1') console.log('  Ctrl-C to stop.');
+});
+
 process.on('unhandledRejection', (err) => console.error('unhandled rejection:', err));
+
+const seed = await store.seedDataDir();
+if (seed.seeded) console.log(`data directory: ${store.DATA_DIR} (${seed.reason})`);
+else if (store.DATA_DIR !== store.REPO_DATA_DIR) console.log(`data directory: ${store.DATA_DIR}`);
 
 listen(DEFAULT_PORT);
