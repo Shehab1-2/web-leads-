@@ -1,5 +1,5 @@
-__pycache__/
-*.pyc
+node_modules/
 .env
-.venv/
-venv/
+.env.local
+*.tmp-*
+app/config.local.json

@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #faf7f1; color: #1d1a15;
+           font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; }
+    p { margin: 0; }
+    a { color: #a83a1e; text-decoration: none; }
+    a:hover { color: #8a2e15; text-decoration: underline; }
+  </style>
+</helmet>
+
+<div style="padding: 56px 70px 60px;">
+
+  <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">web-leads &nbsp;/&nbsp; checking sites</div>
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-top: 16px;">
+    <div>
+      <h1 style="margin: 0; font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 46px; font-weight: 400; line-height: 1.05; letter-spacing: -0.015em;">Checking nine sites</h1>
+      <div style="margin-top: 11px; font-size: 14px; color: #6b6558;">Hair salons &amp; barbershops <span style="color: #cfc6b4;">·</span> Piscataway, NJ <span style="color: #cfc6b4;">·</span> the seven with no website skip this step</div>
+    </div>
+    <div style="text-align: right; padding-bottom: 4px;">
+      <div style="font-size: 13.5px; color: #5c564a; font-variant-numeric: tabular-nums;">5 of 9 checked <span style="color: #a89f8e;">&nbsp;·&nbsp; 47s elapsed</span></div>
+      <div style="width: 280px; height: 4px; margin-top: 10px; border-radius: 2px; background: #e6dfd1; overflow: hidden;">
+        <div style="width: 155px; height: 4px; border-radius: 2px; background: {{accent}};"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 72px; margin-top: 40px;">
+
+    <div style="flex: 1; min-width: 0;">
+
+      <div style="display: flex; align-items: flex-start; gap: 15px; padding: 13px 0; border-top: 1px solid #e6dfd1;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d1a15" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px;"><path d="M20 6L9 17l-5-5"/></svg>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #1d1a15;">heybeautifulhairsalon.com</div>
+          <div style="margin-top: 4px; font-size: 13px; color: #6b6558;">Returns 200 with a 400-byte body that redirects to a parked lander.</div>
+        </div>
+        <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #d98a6b; color: #45190a; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; flex-shrink: 0; margin-top: 1px;">Dead site</span>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 15px; padding: 13px 0; border-top: 1px solid #efe9dd;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d1a15" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px;"><path d="M20 6L9 17l-5-5"/></svg>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #1d1a15;">vintagebarbershop.us</div>
+          <div style="margin-top: 4px; font-size: 13px; color: #6b6558;">301s from http to https, then the TLS handshake fails — unreachable in a browser.</div>
+        </div>
+        <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #d98a6b; color: #45190a; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; flex-shrink: 0; margin-top: 1px;">Dead site</span>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 15px; padding: 13px 0; border-top: 1px solid #efe9dd;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d1a15" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px;"><path d="M20 6L9 17l-5-5"/></svg>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #1d1a15;">squareup.com/appointments/…</div>
+          <div style="margin-top: 4px; font-size: 13px; color: #6b6558;">A booking page on someone else's domain, not a site of their own.</div>
+        </div>
+        <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #ecc4ae; color: #78331a; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; flex-shrink: 0; margin-top: 1px;">Social only</span>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 15px; padding: 13px 0; border-top: 1px solid #efe9dd;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d1a15" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px;"><path d="M20 6L9 17l-5-5"/></svg>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #1d1a15;">mehndibeautysalon.com</div>
+          <div style="margin-top: 4px; font-size: 13px; color: #6b6558;">Three signals — no HTTPS, no viewport tag, retired GoDaddy builder.</div>
+        </div>
+        <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #e2dacb; color: #665e4f; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; flex-shrink: 0; margin-top: 1px;">Very dated</span>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 15px; padding: 13px 0; border-top: 1px solid #efe9dd;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d1a15" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px;"><path d="M20 6L9 17l-5-5"/></svg>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #1d1a15;">sweeneytoddhair.com</div>
+          <div style="margin-top: 4px; font-size: 13px; color: #6b6558;">One signal — footer copyright reads 2023. Otherwise current.</div>
+        </div>
+        <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #ece8df; color: #857e71; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; flex-shrink: 0; margin-top: 1px;">Somewhat dated</span>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 15px; padding: 14px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd; background: #f4f0e6;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a83a1e" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 3px;"><path d="M12 4a8 8 0 0 1 8 8" opacity="0.95"/><path d="M20 12a8 8 0 1 1-8-8" opacity="0.22"/></svg>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #1d1a15;">jennyshairandbeautysalon.us</div>
+          <div style="margin-top: 4px; font-size: 13px; color: #6b6558;">Reading the homepage source…</div>
+          <div style="margin-top: 6px; font-size: 12.5px; color: #a83a1e;">Server rejected the default user agent — retrying as a normal browser before calling it dead.</div>
+        </div>
+        <span style="font-size: 12px; color: #a89f8e; flex-shrink: 0; margin-top: 4px; font-variant-numeric: tabular-nums;">6s</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 15px; padding: 13px 0; border-top: 1px solid #efe9dd;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d5ccba" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="8"/></svg>
+        <div style="flex: 1; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #b3aa98;">dinasnj.com</div>
+        <span style="font-size: 12.5px; color: #c4bba9; flex-shrink: 0;">Queued</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 15px; padding: 13px 0; border-top: 1px solid #efe9dd;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d5ccba" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="8"/></svg>
+        <div style="flex: 1; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #b3aa98;">capellihairsalonllc.com</div>
+        <span style="font-size: 12.5px; color: #c4bba9; flex-shrink: 0;">Queued</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 15px; padding: 13px 0; border-top: 1px solid #efe9dd; border-bottom: 1px solid #e6dfd1;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d5ccba" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="8"/></svg>
+        <div style="flex: 1; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13.5px; color: #b3aa98;">creativeclipsbarbershop.com</div>
+        <span style="font-size: 12.5px; color: #c4bba9; flex-shrink: 0;">Queued</span>
+      </div>
+
+    </div>
+
+    <div style="width: 300px; flex-shrink: 0;">
+
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Verdicts so far</div>
+      <div style="margin-top: 13px;">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #efe9dd;">
+          <span style="width: 10px; height: 10px; border-radius: 2px; background: #d98a6b; flex-shrink: 0;"></span>
+          <span style="flex: 1; font-size: 13.5px; color: #5c564a;">Dead site</span>
+          <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums;">2</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #efe9dd;">
+          <span style="width: 10px; height: 10px; border-radius: 2px; background: #ecc4ae; flex-shrink: 0;"></span>
+          <span style="flex: 1; font-size: 13.5px; color: #5c564a;">Social only</span>
+          <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums;">1</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #efe9dd;">
+          <span style="width: 10px; height: 10px; border-radius: 2px; background: #e2dacb; flex-shrink: 0;"></span>
+          <span style="flex: 1; font-size: 13.5px; color: #5c564a;">Very dated</span>
+          <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums;">1</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #efe9dd;">
+          <span style="width: 10px; height: 10px; border-radius: 2px; background: #ece8df; flex-shrink: 0;"></span>
+          <span style="flex: 1; font-size: 13.5px; color: #5c564a;">Somewhat dated</span>
+          <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums;">1</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 9px 0;">
+          <span style="width: 10px; height: 10px; border-radius: 2px; border: 1px solid #d5ccba; flex-shrink: 0;"></span>
+          <span style="flex: 1; font-size: 13.5px; color: #a89f8e;">Healthy — dropped</span>
+          <span style="font-size: 14px; color: #a89f8e; font-variant-numeric: tabular-nums;">0</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Checks being run</div>
+      <div style="margin-top: 12px; font-size: 13px; line-height: 2.1; color: #5c564a;">
+        Does it load at all<br/>
+        HTTPS and certificate<br/>
+        Viewport meta tag<br/>
+        Footer copyright year<br/>
+        Platform and builder version
+      </div>
+
+      <div style="margin-top: 26px; padding: 15px 16px; border: 1px solid #e3d7c6; border-radius: 5px; background: #f7efe6;">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: #8a4a24;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a4a24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 8v5"/><path d="M12 16.5v.1"/><circle cx="12" cy="12" r="9"/></svg>
+          No browser in this session
+        </div>
+        <p style="margin-top: 8px; font-size: 12.5px; line-height: 1.6; color: #7a5a3e;">The two visual checks — mobile layout and design era — are being skipped. Verdicts will be the conservative floor, not a full read.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":950},"accent":{"editor":"color","default":"#a83a1e","options":["#a83a1e","#1f4b3f","#26406b","#5c3a6e"]}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#a83a1e' };
+  }
+}
+</script>
+</body>
+</html>

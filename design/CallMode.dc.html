@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #faf7f1; color: #1d1a15;
+           font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; }
+    p { margin: 0; }
+    a { color: #a83a1e; text-decoration: none; }
+    a:hover { color: #8a2e15; text-decoration: underline; }
+  </style>
+</helmet>
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 22px 70px; border-bottom: 1px solid #e6dfd1;">
+  <div style="font-size: 13px; color: #6b6558;">Hair salons &amp; barbershops <span style="color: #cfc6b4;">·</span> Piscataway, NJ</div>
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="width: 260px; height: 4px; border-radius: 2px; background: #e6dfd1; overflow: hidden;">
+      <div style="width: 18px; height: 4px; border-radius: 2px; background: {{accent}};"></div>
+    </div>
+    <span style="font-size: 12.5px; color: #8d8577; font-variant-numeric: tabular-nums; white-space: nowrap;">Lead 1 of 14 &nbsp;·&nbsp; 13 to go</span>
+  </div>
+  <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #5c564a;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8d8577" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+    Leave call mode
+  </div>
+</div>
+
+<div style="display: flex; gap: 72px; padding: 52px 70px 56px;">
+
+  <div style="flex: 1; min-width: 0;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <span style="font-size: 12.5px; color: #a89f8e; font-variant-numeric: tabular-nums;">Strongest lead in this list</span>
+    </div>
+
+    <h1 style="margin: 15px 0 0; font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 50px; font-weight: 400; line-height: 1.05; letter-spacing: -0.015em;">Elite Hair Styling</h1>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 13px; font-size: 13.5px; color: #8d8577;">
+      <span>Beauty salon</span>
+      <span style="color: #cfc6b4;">·</span><span>147 Stelton Rd, Piscataway, NJ 08854</span>
+      <span style="color: #cfc6b4;">·</span>
+      <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.4</span>
+      <span style="color: #a89f8e;">186 reviews</span>
+    </div>
+
+    <div style="margin-top: 34px; padding-top: 30px; border-top: 1px solid #e6dfd1;">
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Say this</div>
+      <p style="margin-top: 16px; font-family: Newsreader, Georgia, serif; font-size: 31px; line-height: 1.42; color: #1d1a15; max-width: 660px; text-wrap: pretty;">No website at all — 186 reviews, so the demand is there with nowhere to send it.</p>
+    </div>
+
+    <div style="display: flex; gap: 56px; margin-top: 36px;">
+      <div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Website</div>
+        <div style="margin-top: 8px; font-size: 14px; color: #5c564a;">None listed on Maps</div>
+      </div>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Listing</div>
+        <div style="display: flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 14px; color: #5c564a;">
+          Open in Google Maps
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a89f8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1.6 1.6 0 0 1-1.6 1.6H5A1.6 1.6 0 0 1 3.4 19V7.6A1.6 1.6 0 0 1 5 6h5"/></svg>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">First seen</div>
+        <div style="margin-top: 8px; font-size: 14px; color: #5c564a; font-variant-numeric: tabular-nums;">2 Sep 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 400px; flex-shrink: 0;">
+
+    <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Dial</div>
+    <div style="margin-top: 10px; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 38px; font-weight: 500; letter-spacing: -0.02em; color: #1d1a15;">(732) 529-6238</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 11px; height: 54px; margin-top: 16px; border-radius: 5px; background: {{accent}}; color: #fdf4ef; font-size: 15px; font-weight: 600;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fdf4ef" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 4.6l1.6 3.3-1.9 1.9a13 13 0 0 0 5.9 5.9l1.9-1.9 3.4 1.6v3.1c0 .9-.8 1.6-1.7 1.5A16.4 16.4 0 0 1 4.4 6.2 1.6 1.6 0 0 1 6 4.5z"/></svg>
+      Call now
+    </div>
+
+    <div style="margin-top: 30px; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Notes</div>
+    <div style="margin-top: 10px; height: 128px; padding: 14px 16px; border: 1px solid #ded5c4; border-radius: 5px; background: #fffdf9; font-size: 14px; line-height: 1.6; color: #b3aa98;">What did they say?</div>
+
+    <div style="margin-top: 26px; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Outcome</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #ded5c4; border-radius: 5px; background: #fffdf9; font-size: 13.5px; font-weight: 500; color: #5c564a;">No answer <span style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10px; color: #b3aa98;">1</span></div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #ded5c4; border-radius: 5px; background: #fffdf9; font-size: 13.5px; font-weight: 500; color: #5c564a;">Call back <span style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10px; color: #b3aa98;">2</span></div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #ded5c4; border-radius: 5px; background: #fffdf9; font-size: 13.5px; font-weight: 500; color: #5c564a;">Not interested <span style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10px; color: #b3aa98;">3</span></div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 5px; background: #2a251d; font-size: 13.5px; font-weight: 600; color: #faf7f1;">Interested <span style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10px; color: #a49a88;">4</span></div>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 22px;">
+      <span style="font-size: 12.5px; color: #a89f8e;">Saved to seen_leads.csv</span>
+      <div style="display: inline-flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 500; color: #1d1a15;">
+        Next lead
+        <span style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10px; padding: 2px 6px; border: 1px solid #ded5c4; border-radius: 3px; color: #8d8577;">N</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":900},"accent":{"editor":"color","default":"#a83a1e","options":["#a83a1e","#1f4b3f","#26406b","#5c3a6e"]}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#a83a1e' };
+  }
+}
+</script>
+</body>
+</html>

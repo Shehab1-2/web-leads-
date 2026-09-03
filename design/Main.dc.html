@@ -1,0 +1,357 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #faf7f1; color: #1d1a15;
+           font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; }
+    p { margin: 0; }
+    a { color: #a83a1e; text-decoration: none; }
+    a:hover { color: #8a2e15; text-decoration: underline; }
+  </style>
+</helmet>
+
+<div style="padding: 58px 70px 62px;">
+
+  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 40px;">
+    <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">web-leads &nbsp;/&nbsp; call list</div>
+    <div style="display: flex; align-items: baseline; gap: 22px;">
+      <span style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 11px; color: #b3aa98;">data/leads_hair-salons-and-barbershops-piscataway-nj.csv</span>
+      <span style="font-size: 13px; font-weight: 500; color: #1d1a15; border-bottom: 1px solid #cfc6b4; padding-bottom: 2px;">New search</span>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-top: 18px;">
+    <div>
+      <h1 style="margin: 0; font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 52px; font-weight: 400; line-height: 1.05; letter-spacing: -0.015em; color: #1d1a15;">Hair salons &amp; barbershops</h1>
+      <div style="margin-top: 11px; font-size: 14px; color: #6b6558;">Piscataway, NJ &nbsp;·&nbsp; 2 September 2026 &nbsp;·&nbsp; ranked strongest first</div>
+    </div>
+    <div style="text-align: right; font-size: 13.5px; color: #8d8577; line-height: 1.7; padding-bottom: 4px;">
+      16 pulled &nbsp;·&nbsp; 9 sites checked<br/>
+      <span style="color: #a89f8e;">2 dropped as healthy &nbsp;·&nbsp; 14 worth calling</span>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-top: 34px; padding-bottom: 22px;">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 13px; border: 1px solid #1d1a15; border-radius: 15px; font-size: 12.5px; font-weight: 500; color: #1d1a15;">All <span style="color: #8d8577; font-variant-numeric: tabular-nums;">14</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 13px; border: 1px solid #e3dbcb; border-radius: 15px; font-size: 12.5px; color: #6b6558;">No website <span style="color: #a89f8e; font-variant-numeric: tabular-nums;">7</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 13px; border: 1px solid #e3dbcb; border-radius: 15px; font-size: 12.5px; color: #6b6558;">Dead site <span style="color: #a89f8e; font-variant-numeric: tabular-nums;">2</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 13px; border: 1px solid #e3dbcb; border-radius: 15px; font-size: 12.5px; color: #6b6558;">Social only <span style="color: #a89f8e; font-variant-numeric: tabular-nums;">1</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 13px; border: 1px solid #e3dbcb; border-radius: 15px; font-size: 12.5px; color: #6b6558;">Very dated <span style="color: #a89f8e; font-variant-numeric: tabular-nums;">1</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 13px; border: 1px solid #e3dbcb; border-radius: 15px; font-size: 12.5px; color: #6b6558;">Somewhat dated <span style="color: #a89f8e; font-variant-numeric: tabular-nums;">3</span></span>
+    </div>
+    <div style="font-size: 12.5px; color: #8d8577; white-space: nowrap; font-variant-numeric: tabular-nums;">12 not called &nbsp;·&nbsp; 1 no answer &nbsp;·&nbsp; 1 interested</div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #e6dfd1;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: {{accent}}; font-variant-numeric: tabular-nums;">1</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Elite Hair Styling</span>
+        <span style="color: #cfc6b4;">·</span><span>Beauty salon</span>
+        <span style="color: #cfc6b4;">·</span><span>147 Stelton Rd</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.4</span>
+        <span style="color: #a89f8e;">186 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No website at all — 186 reviews, so the demand is there with nowhere to send it.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 529-6238</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">2</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Great Cuts Salon</span>
+        <span style="color: #cfc6b4;">·</span><span>Beauty salon</span>
+        <span style="color: #cfc6b4;">·</span><span>1390 Centennial Ave</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.2</span>
+        <span style="color: #a89f8e;">161 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No website at all — 161 reviews and nowhere to send any of them.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 981-8155</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">3</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">House of Blades II</span>
+        <span style="color: #cfc6b4;">·</span><span>Barber shop</span>
+        <span style="color: #cfc6b4;">·</span><span>397 Park Ave</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.1</span>
+        <span style="color: #a89f8e;">55 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No website listed, and no phone on Maps either — walk-in or DM only.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <div style="display: flex; align-items: center; gap: 7px; height: 27px; color: #a89f8e; font-size: 15px; font-style: italic; font-family: Newsreader, Georgia, serif;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c4bba9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16"/><path d="M8.5 4.6l1.6 3.3-1.9 1.9a13 13 0 0 0 5.9 5.9l1.9-1.9 3.4 1.6v3.1c0 .9-.8 1.6-1.7 1.5A16.4 16.4 0 0 1 4.4 6.2 1.6 1.6 0 0 1 6 4.5z"/></svg>No phone listed</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">4</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Heights Haircutters</span>
+        <span style="color: #cfc6b4;">·</span><span>Barber shop</span>
+        <span style="color: #cfc6b4;">·</span><span>14 Plainfield Ave Ste 2</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.5</span>
+        <span style="color: #a89f8e;">46 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No website listed on Google Maps at all.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 885-5550</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">5</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Finest Barber Shop</span>
+        <span style="color: #cfc6b4;">·</span><span>Barber shop</span>
+        <span style="color: #cfc6b4;">·</span><span>600 William St</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.5</span>
+        <span style="color: #a89f8e;">26 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No website listed on Google Maps at all.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 369-3915</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">6</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Brothers Barber Shop</span>
+        <span style="color: #cfc6b4;">·</span><span>Barber shop</span>
+        <span style="color: #cfc6b4;">·</span><span>1330 W 7th St</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.3</span>
+        <span style="color: #a89f8e;">10 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No website listed on Google Maps at all.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(908) 333-9080</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">7</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Haircuts and Colors by Marta</span>
+        <span style="color: #cfc6b4;">·</span><span>Hairdresser</span>
+        <span style="color: #cfc6b4;">·</span><span>1390 Centennial Ave</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.5</span>
+        <span style="color: #a89f8e;">2 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No website listed on Google Maps at all.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: {{accent}}; color: #fdf4ef; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">No website</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(908) 420-7017</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">8</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Hey Beautiful Hair Salon</span>
+        <span style="color: #cfc6b4;">·</span><span>Hair salon</span>
+        <span style="color: #cfc6b4;">·</span><span>175 Stelton Rd</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.1</span>
+        <span style="color: #a89f8e;">48 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">They own the domain but it's parked — it just bounces to a placeholder lander.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #d98a6b; color: #45190a; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">Dead site</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 200-8003</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">9</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Vintage Barbershop</span>
+        <span style="color: #cfc6b4;">·</span><span>Barber shop</span>
+        <span style="color: #cfc6b4;">·</span><span>424 S Washington Ave</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.8</span>
+        <span style="color: #a89f8e;">19 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">Site won't load — the secure connection fails, so visitors get a browser error.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #d98a6b; color: #45190a; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">Dead site</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(908) 293-1290</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd; background: #f4f0e6;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #cfc6b4; font-variant-numeric: tabular-nums;">10</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Facelook Barber Shop</span>
+        <span style="color: #cfc6b4;">·</span><span>Barber shop</span>
+        <span style="color: #cfc6b4;">·</span><span>2105 New Brunswick Ave, South Plainfield</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.8</span>
+        <span style="color: #a89f8e;">232 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">Their only web link is a Square booking page — no site of their own for 232 reviews' worth of customers.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #ecc4ae; color: #78331a; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">Social only</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 200-8010</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #cbc2b0; border-radius: 13px; background: #fffdf9; font-size: 12px; font-weight: 500; color: #2a251d;"><svg width="10" height="10" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="#2a251d"/></svg>Interested<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #e6dfd1; background: #f4f0e6;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #cfc6b4; font-variant-numeric: tabular-nums;">11</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Mehndi Beauty Salon</span>
+        <span style="color: #cfc6b4;">·</span><span>Hair salon</span>
+        <span style="color: #cfc6b4;">·</span><span>1665 Stelton Rd</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.3</span>
+        <span style="color: #a89f8e;">190 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">No mobile version, still on http so Chrome shows “Not secure”, and it's on the retired GoDaddy Website Builder 7.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #e2dacb; color: #665e4f; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">Very dated</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 777-9212</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #cbc2b0; border-radius: 13px; background: #fffdf9; font-size: 12px; font-weight: 500; color: #5c564a;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#8d8577" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M6.6 10h6.8"/></svg>No answer<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">12</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Sweeney Todd Hair</span>
+        <span style="color: #cfc6b4;">·</span><span>Hair salon</span>
+        <span style="color: #cfc6b4;">·</span><span>1619 Stelton Rd</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.2</span>
+        <span style="color: #a89f8e;">299 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">Footer copyright still reads 2023 — otherwise a tidy Squarespace site, so a lighter pitch.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #ece8df; color: #857e71; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">Somewhat dated</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 424-0338</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">13</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Jenny's Hair &amp; Beauty Salon</span>
+        <span style="color: #cfc6b4;">·</span><span>Hair salon</span>
+        <span style="color: #cfc6b4;">·</span><span>600 Stelton Rd</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.3</span>
+        <span style="color: #a89f8e;">205 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">Apostrophes render as garbled characters across the page, and the phone on the site doesn't match their Google listing.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #ece8df; color: #857e71; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">Somewhat dated</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 424-6511</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 26px; align-items: flex-start; padding: 20px 18px; margin: 0 -18px; border-top: 1px solid #efe9dd; border-bottom: 1px solid #e6dfd1;">
+    <div style="width: 50px; flex-shrink: 0; text-align: right; font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.15; color: #bdb3a1; font-variant-numeric: tabular-nums;">14</div>
+    <div style="flex: 1; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 13px; color: #8d8577;">
+        <span style="font-size: 14px; font-weight: 600; color: #1d1a15;">Dina's Salon &amp; Barbershop</span>
+        <span style="color: #cfc6b4;">·</span><span>Hair salon</span>
+        <span style="color: #cfc6b4;">·</span><span>1297 Centennial Ave</span>
+        <span style="color: #cfc6b4;">·</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#8d8577" style="flex-shrink: 0;"><path d="M12 3.4l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6L3.3 9.8l6-.9z"/></svg>4.3</span>
+        <span style="color: #a89f8e;">125 reviews</span>
+      </div>
+      <p style="margin-top: 9px; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 1.5; color: #2a251c; max-width: 620px; text-wrap: pretty;">Still http-only, so Chrome shows “Not secure” on every visit; off-the-shelf Weebly template.</p>
+    </div>
+    <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+      <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 3px; background: #ece8df; color: #857e71; font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;">Somewhat dated</span>
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 500; color: #1d1a15; letter-spacing: -0.01em;">(732) 529-4000</div>
+      <span style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px; border: 1px solid #e3dbcb; border-radius: 13px; background: #fffdf9; font-size: 12px; color: #8d8577;"><svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="#c4bba9" stroke-width="2"><circle cx="10" cy="10" r="7"/></svg>Not called<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b3aa98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 72px; margin-top: 38px;">
+    <div style="flex: 1;">
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">Dropped — not leads</div>
+      <p style="margin-top: 10px; font-size: 13.5px; line-height: 1.75; color: #6b6558; max-width: 460px;">Capelli Salon — current Weebly site, https, mobile viewport, 2025 footer.<br/>Creative Clips Barbershop — modern responsive site, https, auto-updating year.</p>
+    </div>
+    <div style="flex: 1;">
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">What was actually checked</div>
+      <p style="margin-top: 10px; font-size: 13.5px; line-height: 1.75; color: #6b6558; max-width: 520px;">HTTP only — load status, TLS, viewport meta, footer year, platform. No browser was available to screenshot the three somewhat-dated sites, so those verdicts are the conservative floor rather than a full visual read.</p>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":2420},"accent":{"editor":"color","default":"#a83a1e","options":["#a83a1e","#1f4b3f","#26406b","#5c3a6e"]}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#a83a1e' };
+  }
+}
+</script>
+</body>
+</html>

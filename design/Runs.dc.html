@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #faf7f1; color: #1d1a15;
+           font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+           -webkit-font-smoothing: antialiased; }
+    p { margin: 0; }
+    a { color: #a83a1e; text-decoration: none; }
+    a:hover { color: #8a2e15; text-decoration: underline; }
+  </style>
+</helmet>
+
+<div style="padding: 56px 70px 60px;">
+
+  <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">web-leads &nbsp;/&nbsp; searches</div>
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-top: 16px;">
+    <div>
+      <h1 style="margin: 0; font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 46px; font-weight: 400; line-height: 1.05; letter-spacing: -0.015em;">Searches</h1>
+      <div style="margin-top: 11px; font-size: 14px; color: #6b6558; max-width: 620px;">What each run cost, what it found, and what it turned into — so the next trade you pick is not a guess.</div>
+    </div>
+    <div style="display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 20px; border-radius: 5px; background: {{accent}}; color: #fdf4ef; font-size: 14px; font-weight: 600;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fdf4ef" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+      New search
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 24px; margin-top: 36px; padding-bottom: 11px; border-bottom: 1px solid #e6dfd1; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #a89f8e;">
+    <span style="width: 100px; flex-shrink: 0;">Date</span>
+    <span style="flex: 1;">Trade and town</span>
+    <span style="width: 110px; flex-shrink: 0; text-align: right;">Returned</span>
+    <span style="width: 90px; flex-shrink: 0; text-align: right;">Leads</span>
+    <span style="width: 90px; flex-shrink: 0; text-align: right;">Dropped</span>
+    <span style="width: 90px; flex-shrink: 0; text-align: right;">Cost</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 24px; padding: 16px 18px; margin: 0 -18px; border-bottom: 1px solid #e6dfd1; background: #f4f0e6;">
+    <span style="width: 100px; flex-shrink: 0; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 13px; color: #5c564a;">2 Sep 26</span>
+    <span style="flex: 1; min-width: 0; font-size: 14.5px;"><span style="font-weight: 600;">Hair salons &amp; barbershops</span><span style="color: #8d8577;"> · Piscataway, NJ</span></span>
+    <span style="width: 110px; flex-shrink: 0; text-align: right; font-size: 14px; color: #5c564a; font-variant-numeric: tabular-nums;">16 <span style="color: #a89f8e; font-size: 12.5px;">of 20</span></span>
+    <span style="width: 90px; flex-shrink: 0; text-align: right; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;">14</span>
+    <span style="width: 90px; flex-shrink: 0; text-align: right; font-size: 14px; color: #8d8577; font-variant-numeric: tabular-nums;">2</span>
+    <span style="width: 90px; flex-shrink: 0; text-align: right; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 14px; font-variant-numeric: tabular-nums;">$0.03</span>
+  </div>
+
+  <div style="display: flex; gap: 72px; margin-top: 44px;">
+
+    <div style="flex: 1; min-width: 0;">
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">What this run found</div>
+
+      <div style="margin-top: 20px;">
+        <div style="display: flex; align-items: center; gap: 18px; padding: 8px 0;">
+          <span style="width: 132px; flex-shrink: 0; font-size: 13.5px; color: #5c564a;">No website</span>
+          <span style="width: 400px; height: 16px; border-radius: 2px; background: #efe9dd; flex-shrink: 0;"><span style="display: block; width: 175px; height: 16px; border-radius: 2px; background: {{accent}};"></span></span>
+          <span style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums;">7</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px; padding: 8px 0;">
+          <span style="width: 132px; flex-shrink: 0; font-size: 13.5px; color: #5c564a;">Dead site</span>
+          <span style="width: 400px; height: 16px; border-radius: 2px; background: #efe9dd; flex-shrink: 0;"><span style="display: block; width: 50px; height: 16px; border-radius: 2px; background: #d98a6b;"></span></span>
+          <span style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums;">2</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px; padding: 8px 0;">
+          <span style="width: 132px; flex-shrink: 0; font-size: 13.5px; color: #5c564a;">Social only</span>
+          <span style="width: 400px; height: 16px; border-radius: 2px; background: #efe9dd; flex-shrink: 0;"><span style="display: block; width: 25px; height: 16px; border-radius: 2px; background: #ecc4ae;"></span></span>
+          <span style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums;">1</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px; padding: 8px 0;">
+          <span style="width: 132px; flex-shrink: 0; font-size: 13.5px; color: #5c564a;">Very dated</span>
+          <span style="width: 400px; height: 16px; border-radius: 2px; background: #efe9dd; flex-shrink: 0;"><span style="display: block; width: 25px; height: 16px; border-radius: 2px; background: #e2dacb;"></span></span>
+          <span style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums;">1</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px; padding: 8px 0;">
+          <span style="width: 132px; flex-shrink: 0; font-size: 13.5px; color: #5c564a;">Somewhat dated</span>
+          <span style="width: 400px; height: 16px; border-radius: 2px; background: #efe9dd; flex-shrink: 0;"><span style="display: block; width: 75px; height: 16px; border-radius: 2px; background: #ddd8cd;"></span></span>
+          <span style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums;">3</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px; padding: 8px 0;">
+          <span style="width: 132px; flex-shrink: 0; font-size: 13.5px; color: #a89f8e;">Healthy — dropped</span>
+          <span style="width: 400px; height: 16px; border-radius: 2px; background: #efe9dd; flex-shrink: 0;"><span style="display: block; width: 50px; height: 16px; border-radius: 2px; border: 1px dashed #cfc6b4;"></span></span>
+          <span style="font-size: 14px; color: #a89f8e; font-variant-numeric: tabular-nums;">2</span>
+        </div>
+      </div>
+
+      <p style="margin-top: 20px; font-size: 13px; line-height: 1.6; color: #8d8577; max-width: 520px;">Nine in fourteen had no site of their own at all. That ratio is the thing to watch across trades — it is what makes a town worth the drive.</p>
+    </div>
+
+    <div style="width: 320px; flex-shrink: 0;">
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #a89f8e;">What it turned into</div>
+
+      <div style="margin-top: 20px; padding: 20px 22px; border: 1px solid #e6dfd1; border-radius: 6px; background: #fffdf9;">
+        <div style="display: flex; align-items: baseline; gap: 10px;">
+          <span style="font-family: Newsreader, Georgia, serif; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums;">2</span>
+          <span style="font-size: 13.5px; color: #6b6558;">of 14 called so far</span>
+        </div>
+        <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid #efe9dd;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 13.5px;">
+            <span style="color: #5c564a;">Interested</span><span style="font-weight: 600; font-variant-numeric: tabular-nums;">1</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 13.5px;">
+            <span style="color: #5c564a;">No answer</span><span style="font-weight: 600; font-variant-numeric: tabular-nums;">1</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 13.5px;">
+            <span style="color: #a89f8e;">Still to call</span><span style="color: #8d8577; font-variant-numeric: tabular-nums;">12</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; padding: 18px 22px; border: 1px solid #e6dfd1; border-radius: 6px; background: #fffdf9;">
+        <div style="font-size: 12.5px; color: #8d8577;">Cost per lead</div>
+        <div style="margin-top: 7px; font-family: 'IBM Plex Mono', ui-monospace, Consolas, monospace; font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums;">$0.002</div>
+        <div style="margin-top: 7px; font-size: 12.5px; color: #a89f8e;">$0.03 estimated for the run, 14 leads out.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 26px; margin-top: 40px; padding: 26px 30px; border: 1px dashed #d8cfbd; border-radius: 6px;">
+    <div style="display: flex; gap: 7px; align-items: flex-end; flex-shrink: 0;">
+      <span style="width: 14px; height: 26px; border-radius: 2px; background: #e9e3d7;"></span>
+      <span style="width: 14px; height: 44px; border-radius: 2px; background: #e2dacb;"></span>
+      <span style="width: 14px; height: 34px; border-radius: 2px; background: #e9e3d7;"></span>
+      <span style="width: 14px; height: 56px; border-radius: 2px; background: #ddd4c4;"></span>
+    </div>
+    <div>
+      <div style="font-size: 14.5px; font-weight: 600; color: #5c564a;">Which trades and towns are worth it</div>
+      <p style="margin-top: 7px; font-size: 13px; line-height: 1.6; color: #8d8577; max-width: 620px;">Comparison needs a second search. Once another trade or another town is in, this is where the no-website rate and the interested rate sit side by side.</p>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":1000},"accent":{"editor":"color","default":"#a83a1e","options":["#a83a1e","#1f4b3f","#26406b","#5c3a6e"]}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#a83a1e' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Search.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "1 · New search" },
+    { "file": "Checking.dc.html", "x": 1560, "y": 0, "w": 1440, "h": 950, "title": "2 · Checking sites" },
+    { "file": "Main.dc.html", "x": 3120, "y": 0, "w": 1440, "h": 2420, "title": "3 · Call list" },
+    { "file": "SiteCheck.dc.html", "x": 4680, "y": 0, "w": 1440, "h": 1220, "title": "4 · Site check" },
+    { "file": "CallMode.dc.html", "x": 6240, "y": 0, "w": 1440, "h": 900, "title": "5 · Call mode" },
+    { "file": "History.dc.html", "x": 0, "y": 2560, "w": 1440, "h": 1280, "title": "Call history" },
+    { "file": "Runs.dc.html", "x": 1560, "y": 2560, "w": 1440, "h": 1000, "title": "Searches" },
+    { "file": "Email.dc.html", "x": 3115, "y": 2747, "w": 1440, "h": 1320, "title": "Cold email · Instantly" }
+  ],
+  "launch": { "view": "canvas" }
+}
