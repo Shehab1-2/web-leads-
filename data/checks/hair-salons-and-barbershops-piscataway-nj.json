@@ -1,0 +1,751 @@
+{
+  "ChIJS6rhzvDHw4kRosAmkvUWSCU": {
+    "place_id": "ChIJS6rhzvDHw4kRosAmkvUWSCU",
+    "url": "http://www.mehndibeautysalon.com/",
+    "finalUrl": "http://www.mehndibeautysalon.com/",
+    "ok": true,
+    "tier": "very_dated",
+    "reason": "No mobile version (no viewport tag in the page source), still on http so Chrome shows \"Not secure\" to every visitor, and it's on the retired GoDaddy Website Builder 7.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": true,
+        "evidence": "Serves over http:// only, so Chrome flags every visit as Not secure."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": true,
+        "evidence": "The source has no <meta name=\"viewport\">, so the page predates mobile layout entirely."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": false,
+        "evidence": "No copyright year in the page source to go stale."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": false,
+        "evidence": "3 images sampled, all loaded."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": true,
+        "evidence": "Built on GoDaddy Website Builder 7, a product its vendor has retired."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": "GoDaddy Website Builder 7",
+    "httpStatus": 200,
+    "https": false,
+    "viewport": false,
+    "footerYear": null,
+    "parked": false,
+    "retriedWithBrowserUa": false,
+    "ms": 872,
+    "checkedAt": "2026-09-03T10:47:01.348Z",
+    "error": null,
+    "hops": [
+      {
+        "url": "http://www.mehndibeautysalon.com/",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": null,
+    "title": "Mehndi Beauty Salon - Eyebrow Waxing, Eye Brow, Mehndi",
+    "brokenImages": [],
+    "templateTells": [
+      "it's on the retired GoDaddy Website Builder 7"
+    ]
+  },
+  "ChIJ6UHwsbK5w4kRUd9lYsI0nuo": {
+    "place_id": "ChIJ6UHwsbK5w4kRUd9lYsI0nuo",
+    "url": "http://heybeautifulhairsalon.com/",
+    "finalUrl": "https://heybeautifulhairsalon.com/lander",
+    "ok": false,
+    "tier": "dead_site",
+    "reason": "The domain is registered but parked - it just bounces to a GoDaddy parking lander, so there's no site behind it.",
+    "signals": [
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": null,
+        "evidence": "Not checked - the domain is parked (a GoDaddy parking lander), so there is no site to score."
+      },
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": null,
+        "evidence": "Not checked - the domain is parked (a GoDaddy parking lander), so there is no site to score."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": null,
+        "evidence": "Not checked - the domain is parked (a GoDaddy parking lander), so there is no site to score."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": null,
+        "evidence": "Not checked - the domain is parked (a GoDaddy parking lander), so there is no site to score."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": null,
+        "evidence": "Not checked - the domain is parked (a GoDaddy parking lander), so there is no site to score."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": null,
+    "httpStatus": 200,
+    "https": true,
+    "viewport": null,
+    "footerYear": null,
+    "parked": true,
+    "retriedWithBrowserUa": false,
+    "ms": 898,
+    "checkedAt": "2026-09-03T10:47:01.782Z",
+    "error": "parked: a GoDaddy parking lander",
+    "hops": [
+      {
+        "url": "http://heybeautifulhairsalon.com/",
+        "status": 200,
+        "to": "http://heybeautifulhairsalon.com/lander",
+        "via": "a JavaScript redirect",
+        "error": null
+      },
+      {
+        "url": "http://heybeautifulhairsalon.com/lander",
+        "status": 301,
+        "to": "https://heybeautifulhairsalon.com/lander",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://heybeautifulhairsalon.com/lander",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": "parked",
+    "parkedAs": "a GoDaddy parking lander"
+  },
+  "ChIJ78kMRYm5w4kRup5UWEMX56Q": {
+    "place_id": "ChIJ78kMRYm5w4kRup5UWEMX56Q",
+    "url": "http://vintagebarbershop.us/",
+    "finalUrl": "https://vintagebarbershop.us/",
+    "ok": false,
+    "tier": "dead_site",
+    "reason": "The site won't load - the http address redirects to https and the secure connection then fails, so browsers show an error page.",
+    "signals": [
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": null,
+        "evidence": "Not checked - the site did not load (the secure connection was dropped before it completed)."
+      },
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": null,
+        "evidence": "Not checked - the site did not load (the secure connection was dropped before it completed)."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": null,
+        "evidence": "Not checked - the site did not load (the secure connection was dropped before it completed)."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": null,
+        "evidence": "Not checked - the site did not load (the secure connection was dropped before it completed)."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": null,
+        "evidence": "Not checked - the site did not load (the secure connection was dropped before it completed)."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": null,
+    "httpStatus": null,
+    "https": null,
+    "viewport": null,
+    "footerYear": null,
+    "parked": false,
+    "retriedWithBrowserUa": true,
+    "ms": 985,
+    "checkedAt": "2026-09-03T10:47:01.875Z",
+    "error": "the secure connection was dropped before it completed",
+    "hops": [
+      {
+        "url": "http://vintagebarbershop.us/",
+        "status": 301,
+        "to": "https://vintagebarbershop.us/",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://vintagebarbershop.us/",
+        "status": null,
+        "to": null,
+        "via": null,
+        "error": "the secure connection was dropped before it completed"
+      }
+    ],
+    "errorKind": "tls"
+  },
+  "ChIJQdFKlva4w4kRHad4WbvyzXU": {
+    "place_id": "ChIJQdFKlva4w4kRHad4WbvyzXU",
+    "url": "https://www.sweeneytoddhair.com/home",
+    "finalUrl": "https://www.sweeneytoddhair.com/home",
+    "ok": true,
+    "tier": "somewhat_dated",
+    "reason": "The footer copyright still reads 2023 - otherwise clean on the HTTP checks (https, mobile viewport on Squarespace), so a lighter pitch.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Served over https with a certificate the connection accepted."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Has <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": true,
+        "evidence": "Newest copyright year on the page is 2023, 3 years behind 2026."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": false,
+        "evidence": "5 images sampled, all loaded."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": false,
+        "evidence": "Built on Squarespace, with no placeholder copy or default template text left in the page."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": "Squarespace",
+    "httpStatus": 200,
+    "https": true,
+    "viewport": true,
+    "footerYear": 2023,
+    "parked": false,
+    "retriedWithBrowserUa": false,
+    "ms": 979,
+    "checkedAt": "2026-09-03T10:47:02.515Z",
+    "error": null,
+    "hops": [
+      {
+        "url": "https://www.sweeneytoddhair.com/home",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": null,
+    "title": "Home - Sweeny Todd Hair",
+    "brokenImages": [],
+    "templateTells": []
+  },
+  "ChIJ___Pvk24w4kRyu8IETb1Srg": {
+    "place_id": "ChIJ___Pvk24w4kRyu8IETb1Srg",
+    "url": "https://squareup.com/appointments/book/8CKQR2T9V6JJF/start",
+    "finalUrl": "https://book.squareup.com/appointments/zp84ysvyh1hcgs/location/8CKQR2T9V6JJF",
+    "ok": true,
+    "tier": "social_only",
+    "reason": "Their only web link is a Square booking page - no site of their own.",
+    "signals": [
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": null,
+        "evidence": "Not checked - the listed link is a Square booking page, not a site of their own."
+      },
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": null,
+        "evidence": "Not checked - the listed link is a Square booking page, not a site of their own."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": null,
+        "evidence": "Not checked - the listed link is a Square booking page, not a site of their own."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": null,
+        "evidence": "Not checked - the listed link is a Square booking page, not a site of their own."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": null,
+        "evidence": "Not checked - the listed link is a Square booking page, not a site of their own."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": null,
+    "httpStatus": 200,
+    "https": true,
+    "viewport": true,
+    "footerYear": null,
+    "parked": false,
+    "retriedWithBrowserUa": false,
+    "ms": 2063,
+    "checkedAt": "2026-09-03T10:47:02.950Z",
+    "error": null,
+    "hops": [
+      {
+        "url": "https://squareup.com/appointments/book/8CKQR2T9V6JJF/start",
+        "status": 301,
+        "to": "https://app.squareup.com/appointments/book/8CKQR2T9V6JJF/start",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://app.squareup.com/appointments/book/8CKQR2T9V6JJF/start",
+        "status": 302,
+        "to": "https://book.squareup.com/appointments/zp84ysvyh1hcgs/location/8CKQR2T9V6JJF",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://book.squareup.com/appointments/zp84ysvyh1hcgs/location/8CKQR2T9V6JJF",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": null,
+    "title": "Facelook Barber Shop | Book Appointments | SOUTH PLAINFIELD, NJ",
+    "templateTells": [],
+    "hostWhat": "a Square booking page"
+  },
+  "ChIJn1Umvv65w4kRCeZBRNcvxHw": {
+    "place_id": "ChIJn1Umvv65w4kRCeZBRNcvxHw",
+    "url": "http://dinasnj.com/",
+    "finalUrl": "https://www.dinasnj.com/",
+    "ok": true,
+    "tier": "not_a_lead",
+    "reason": "Current Weebly site, https, mobile viewport, 2025 footer, images all loading - no pitch here.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Served over https with a certificate the connection accepted."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Has <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": false,
+        "evidence": "Footer year is current (2025)."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": false,
+        "evidence": "5 images sampled, all loaded."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": false,
+        "evidence": "Built on Weebly, with no placeholder copy or default template text left in the page."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": "Weebly",
+    "httpStatus": 200,
+    "https": true,
+    "viewport": true,
+    "footerYear": 2025,
+    "parked": false,
+    "retriedWithBrowserUa": false,
+    "ms": 1856,
+    "checkedAt": "2026-09-03T10:47:03.235Z",
+    "error": null,
+    "hops": [
+      {
+        "url": "http://dinasnj.com/",
+        "status": 301,
+        "to": "http://www.dinasnj.com/",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "http://www.dinasnj.com/",
+        "status": 301,
+        "to": "https://www.dinasnj.com/",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://www.dinasnj.com/",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": null,
+    "title": "DINA'S SALON & BARBERSHOP - Home",
+    "brokenImages": [],
+    "templateTells": []
+  },
+  "ChIJQQYArv-4w4kR_sjkeOPIEKM": {
+    "place_id": "ChIJQQYArv-4w4kR_sjkeOPIEKM",
+    "url": "https://www.capellihairsalonllc.com/",
+    "finalUrl": "https://www.capellihairsalonllc.com/",
+    "ok": true,
+    "tier": "not_a_lead",
+    "reason": "Current Weebly site, https, mobile viewport, 2025 footer, images all loading - no pitch here.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Served over https with a certificate the connection accepted."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Has <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": false,
+        "evidence": "Footer year is current (2025)."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": false,
+        "evidence": "5 images sampled, all loaded."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": false,
+        "evidence": "Built on Weebly, with no placeholder copy or default template text left in the page."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": "Weebly",
+    "httpStatus": 200,
+    "https": true,
+    "viewport": true,
+    "footerYear": 2025,
+    "parked": false,
+    "retriedWithBrowserUa": false,
+    "ms": 1102,
+    "checkedAt": "2026-09-03T10:47:03.379Z",
+    "error": null,
+    "hops": [
+      {
+        "url": "https://www.capellihairsalonllc.com/",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": null,
+    "title": "CAPELLI SALON - Home",
+    "brokenImages": [],
+    "templateTells": []
+  },
+  "ChIJzS_IxFfHw4kRHJuRJ81yktQ": {
+    "place_id": "ChIJzS_IxFfHw4kRHJuRJ81yktQ",
+    "url": "http://creativeclipsbarbershop.com/",
+    "finalUrl": "https://creativeclipsbarbershop.com/",
+    "ok": true,
+    "tier": "not_a_lead",
+    "reason": "Current site, https, mobile viewport, no stale year in the footer, images all loading - no pitch here.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Served over https with a certificate the connection accepted."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Has <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": false,
+        "evidence": "No copyright year in the page source to go stale."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": false,
+        "evidence": "5 images sampled, all loaded."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": false,
+        "evidence": "No placeholder copy or default template text left in the page."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": null,
+    "httpStatus": 200,
+    "https": true,
+    "viewport": true,
+    "footerYear": null,
+    "parked": false,
+    "retriedWithBrowserUa": false,
+    "ms": 1377,
+    "checkedAt": "2026-09-03T10:47:03.953Z",
+    "error": null,
+    "hops": [
+      {
+        "url": "http://creativeclipsbarbershop.com/",
+        "status": 301,
+        "to": "https://creativeclipsbarbershop.com/",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://creativeclipsbarbershop.com/",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": null,
+    "title": "Creative Clips Barbershop",
+    "brokenImages": [],
+    "templateTells": []
+  },
+  "ChIJO1Lz5e-5w4kRQ5yHqVcW7To": {
+    "place_id": "ChIJO1Lz5e-5w4kRQ5yHqVcW7To",
+    "url": "http://jennyshairandbeautysalon.us/",
+    "finalUrl": "https://www.jennyshairandbeautysalon.us/",
+    "ok": true,
+    "tier": "very_dated",
+    "reason": "The footer copyright still reads 2017, the captcha image on their contact form doesn't load (HTTP 404), and the browser tab title is still the raw domain name.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Served over https with a certificate the connection accepted."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Has <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1\">."
+      },
+      {
+        "id": "stale_copyright",
+        "label": "Stale copyright",
+        "found": true,
+        "evidence": "Newest copyright year on the page is 2017, 9 years behind 2026."
+      },
+      {
+        "id": "broken_elements",
+        "label": "Broken elements",
+        "found": true,
+        "evidence": "1 of 5 images sampled did not load (3130389831.png: HTTP 404)."
+      },
+      {
+        "id": "untouched_template",
+        "label": "Untouched template",
+        "found": true,
+        "evidence": "The browser tab title is still the raw domain name."
+      },
+      {
+        "id": "not_mobile_friendly",
+        "label": "Not mobile-friendly",
+        "found": null,
+        "evidence": "Not checked - needs a browser at a phone-width viewport."
+      },
+      {
+        "id": "dated_design_era",
+        "label": "Dated design era",
+        "found": null,
+        "evidence": "Not checked - needs a browser screenshot to judge."
+      }
+    ],
+    "platform": "WordPress",
+    "httpStatus": 200,
+    "https": true,
+    "viewport": true,
+    "footerYear": 2017,
+    "parked": false,
+    "retriedWithBrowserUa": false,
+    "ms": 2789,
+    "checkedAt": "2026-09-03T10:47:04.169Z",
+    "error": null,
+    "hops": [
+      {
+        "url": "http://jennyshairandbeautysalon.us/",
+        "status": 301,
+        "to": "https://jennyshairandbeautysalon.us/",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://jennyshairandbeautysalon.us/",
+        "status": 301,
+        "to": "https://www.jennyshairandbeautysalon.us/",
+        "via": null,
+        "error": null
+      },
+      {
+        "url": "https://www.jennyshairandbeautysalon.us/",
+        "status": 200,
+        "to": null,
+        "via": null,
+        "error": null
+      }
+    ],
+    "errorKind": null,
+    "title": "jennyshairandbeautysalon - jennyshairandbeautysalon",
+    "brokenImages": [
+      {
+        "url": "https://www.jennyshairandbeautysalon.us/wp-content/uploads/wpcf7_captcha/3130389831.png",
+        "why": "HTTP 404"
+      }
+    ],
+    "templateTells": [
+      "the browser tab title is still the raw domain name"
+    ]
+  }
+}

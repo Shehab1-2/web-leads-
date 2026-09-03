@@ -89,10 +89,20 @@ usage-limit gap.
 - Do not run a live Apify search without asking — it costs credit and appends
   real businesses to call history.
 
-## Open decision for you
+## Re-check, run 2026-09-03
 
-The live check disagrees with two stored verdicts (above). Re-running the check
-from the UI would rewrite `checked_tier` and `reason` in the run CSV — dropping
-Dina's off the call list and promoting Jenny's to `very_dated`. That is a real
-change to a list you may be working from, so it is left for you to trigger
-rather than done silently.
+Approved and run. `POST /api/check/:slug` with `{"force": true}` re-checked all
+9 sites and wrote fresh verdicts back into the run CSV.
+
+- **Dina's Salon** `somewhat_dated` → `not_a_lead` — dropped. Their site is on
+  HTTPS with a 2025 footer now; the old "not secure" opener was wrong.
+- **Jenny's** `somewhat_dated` → `very_dated` — now 11th instead of near the
+  bottom, on 205 reviews.
+- 7 more reason lines rewritten by the checker at the same tier.
+- The call list is 13 leads, down from 14. All 16 rows and every `place_id`
+  survived; `seen_leads.csv` untouched at `4852a913a730`.
+
+This needed a fix first: the check endpoint only ever looked at leads with no
+verdict yet, so it silently found nothing to do. Verdicts go stale — Dina's is
+the proof — so `force` now re-checks every lead that has a site. Without it the
+endpoint says so plainly instead of reporting success over a no-op.

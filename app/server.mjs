@@ -307,16 +307,25 @@ async function api(req, res, pathname) {
   if (method === 'POST' && (m = pathname.match(/^\/api\/check\/(.+)$/))) {
     const slug = decodeURIComponent(m[1]);
     await requireRun(slug);
+    const body = await readBody(req);
     const release = guard(`check:${slug}`);
     const s = openStream(res);
     try {
       const { leads } = await store.readRun(slug);
-      const todo = leads.filter((l) => String(l.website || '').trim() && effectiveTier(l) === 'needs_check');
+      const hasSite = (l) => String(l.website || '').trim();
+      // Verdicts go stale — a site that was http-only in March can be on HTTPS
+      // by June, and the stored opener would then be wrong on the call. `force`
+      // re-checks everything with a site, not just the never-checked ones.
+      const todo = body.force
+        ? leads.filter(hasSite)
+        : leads.filter((l) => hasSite(l) && effectiveTier(l) === 'needs_check');
       if (!todo.length) {
-        s.log('Every lead in this run is already classified from the Maps data.');
+        s.log(leads.some(hasSite)
+          ? 'Every site in this run already has a verdict. Re-check them with force to refresh.'
+          : 'No lead in this run has a site to check.');
         return s.done({ checks: {}, checked: 0 });
       }
-      s.log(`Checking ${todo.length} site(s) — HTTP only, no browser in this session.`);
+      s.log(`Checking ${todo.length} site(s)${body.force ? ' (refreshing existing verdicts)' : ''} — HTTP only, no browser in this session.`);
       const checks = await checkAll(todo, {
         concurrency: 4,
         onProgress: (p) => { s.log(p.message); s.progress(p); },
