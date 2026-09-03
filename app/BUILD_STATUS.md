@@ -37,12 +37,24 @@ usage-limit gap.
         signals (2017 footer, 404 captcha image, raw-domain tab title). 3+ signals
         is `very_dated` by the rubric, so the checker is rubric-correct. The
         garbled apostrophes the manual pass saw are gone (0 mojibake markers now).
-- [ ] **Adversarial pass on `sitecheck.mjs`.** Scoring boundaries hold (already
-      spot-checked), but untested: 403 from a bot-blocker after the browser-UA
-      retry, redirect loops, self-signed certs, `stale_copyright` against real
-      footers (`© 2013`, `Copyright 2011-2019`, a year inside an address like
-      "1665 Stelton Rd"), windows-1252 pages. Check every `buildReason` branch
-      is specific, neutral and never asserts a visual judgement.
+- [x] **Adversarial pass on `sitecheck.mjs`.** `node app/tools/sitecheck-adversarial.mjs`
+      stands up a local server serving 13 nasty cases and asserts the verdict on
+      each — **13/13 pass**. Covers `© 2013`, `Copyright 2011-2019` (newest year
+      wins), a JS-only copyright, street/phone/zip digits that must never parse
+      as a year ("1665 Stelton Rd"), redirect loops, a bot-blocker 403 before
+      and after the browser-UA retry, a parked page detected by body rather than
+      status, a hung server, and windows-1252 bytes. Every `buildReason` branch
+      was audited: none insulting, none asserting a visual judgement the checker
+      did not earn.
+
+      **Found and fixed a real defect.** The empty-page test was
+      `visibleText < 40 && no <img>` → `dead_site`, which called a healthy page
+      dead. Since `dead_site` ranks second from the top, a false positive would
+      have put a working business near the *front* of the call list under "your
+      site doesn't load" — the worst possible opener. Now a page carrying links,
+      images, media or a form counts as real however little prose it has.
+      Re-verified against the 9 live domains afterwards: still 7/9, no
+      regression.
 - [x] **Audited `views/runs.js` and `views/email.js`.** Both render against the
       real run (94 and 166 nodes). Their agent was killed before self-verifying,
       but the code is sound.

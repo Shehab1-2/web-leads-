@@ -1053,7 +1053,14 @@ export async function checkSite(url, opts = {}) {
     return settleDead('http_error', `HTTP ${httpStatus}`, `the server returned HTTP ${httpStatus}.`);
   }
 
-  if (visibleText(body).length < 40 && !/<img\b/i.test(body)) {
+  // "Empty" has to mean genuinely nothing, because dead_site ranks second from
+  // the top: a false positive here puts a working business near the front of
+  // the call list under "your site doesn't load", which is the worst possible
+  // opener. Short text alone is not enough - a page carrying links, images,
+  // media or a form is a real page however little prose it has.
+  const hasStructure = /<(img|picture|video|iframe|svg|form)\b/i.test(body)
+    || /<a\s[^>]*href\s*=\s*["']?(?!#|javascript:)[^"'\s>]/i.test(body);
+  if (visibleText(body).length < 40 && !hasStructure) {
     return settleDead('empty', 'the page has no content', 'the page came back empty.');
   }
 
