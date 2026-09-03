@@ -1,5 +1,8 @@
-// Shell: hash router, API client, nav, toasts. Views are lazy ES modules
-// under ./views/ and get a ctx with everything they need.
+// Shell: hash router, API client, pipeline nav + stage strip, toasts.
+// Views are lazy ES modules under ./views/ and get a ctx with everything
+// they need. The shell owns the workflow spine: search → check → call →
+// follow up, with the current position and live counts rendered on every
+// navigation.
 
 import { h, clear, icon } from './dom.js';
 
@@ -63,6 +66,20 @@ async function stream(url, body, handlers = {}) {
   return done;
 }
 
+// Long jobs keep running server-side wherever the user navigates; this
+// registry is what lets the nav say so. Client-side on purpose: the server's
+// per-run guard already 409s a double-start, so the only thing lost on a tab
+// reload is the indicator itself.
+const jobs = new Map();
+
+function tracked(key, label, fn) {
+  return async (...args) => {
+    jobs.set(key, label);
+    renderNav();
+    try { return await fn(...args); } finally { jobs.delete(key); renderNav(); }
+  };
+}
+
 export const api = {
   state: () => json('GET', '/api/state'),
   runs: () => json('GET', '/api/runs'),
@@ -70,9 +87,12 @@ export const api = {
   history: () => json('GET', '/api/history'),
   email: (slug) => json('GET', `/api/email/${encodeURIComponent(slug)}`),
   outcome: (body) => json('POST', '/api/outcome', body),
-  search: (body, handlers) => stream('/api/search', body, handlers),
-  check: (slug, handlers) => stream(`/api/check/${encodeURIComponent(slug)}`, {}, handlers),
-  scanEmails: (slug, handlers) => stream(`/api/email/${encodeURIComponent(slug)}/scan`, {}, handlers),
+  search: tracked('search', 'Searching…',
+    (body, handlers) => stream('/api/search', body, handlers)),
+  check: tracked('check', 'Checking sites…',
+    (slug, handlers, body) => stream(`/api/check/${encodeURIComponent(slug)}`, body || {}, handlers)),
+  scanEmails: tracked('scan', 'Scanning for addresses…',
+    (slug, handlers) => stream(`/api/email/${encodeURIComponent(slug)}/scan`, {}, handlers)),
 };
 
 // ---------------------------------------------------------------- routes
@@ -112,37 +132,109 @@ async function refresh() {
   return state;
 }
 
+// ----------------------------------------------------------- the pipeline
+
+// The workflow spine. Everything the nav and stage strip say comes from here,
+// derived from the active run, so both always agree.
+function pipeline() {
+  const r = state.activeRun;
+  const enc = r ? encodeURIComponent(r.slug) : null;
+  return [
+    {
+      key: 'search', n: '1', label: 'Search', hash: '#/search',
+      count: null, done: Boolean(r), enabled: true,
+    },
+    {
+      key: 'check', n: '2', label: 'Check sites', hash: enc ? `#/checking/${enc}` : null,
+      count: r?.needsCheck || null, done: Boolean(r) && !r.needsCheck, enabled: Boolean(r),
+    },
+    {
+      key: 'call', n: '3', label: 'Call', hash: enc ? `#/leads/${enc}` : null,
+      count: r?.toCall || null, done: Boolean(r) && r.leads > 0 && !r.toCall, enabled: Boolean(r),
+    },
+    {
+      key: 'follow', n: '4', label: 'Follow up', hash: enc ? `#/email/${enc}` : null,
+      count: null, done: false, enabled: Boolean(r),
+    },
+  ];
+}
+
+function stageForPath(path) {
+  if (path.startsWith('/search')) return 'search';
+  if (path.startsWith('/checking/')) return 'check';
+  if (path.startsWith('/leads/') || path.startsWith('/call/')) return 'call';
+  if (path.startsWith('/email/')) return 'follow';
+  return null;
+}
+
+/** The strip above every pipeline view: where you are, what is left, one tap
+ *  to any stage. */
+function stageStrip(currentKey) {
+  const strip = h('div', { class: 'stages' });
+  pipeline().forEach((s, i) => {
+    if (i) strip.appendChild(h('span', { class: 'stages__sep' },
+      icon('chevronRight', { size: 11, stroke: 'currentColor', width: 2.2 })));
+    const isHere = s.key === currentKey;
+    const bits = [
+      h('span', { class: 'stage__n', text: s.n }),
+      h('span', { text: s.label }),
+      s.done && !isHere ? icon('check', { size: 11, stroke: 'currentColor', width: 2.6 }) : null,
+      s.count ? h('span', { class: 'stage__count', text: String(s.count) }) : null,
+    ];
+    const cls = `stage${!s.enabled ? ' stage--wait' : ''}`;
+    strip.appendChild(s.enabled && s.hash && !isHere
+      ? h('a', { class: cls, href: s.hash }, bits)
+      : h('span', { class: cls, ...(isHere ? { 'aria-current': 'step' } : {}) }, bits));
+  });
+  return strip;
+}
+
 // ------------------------------------------------------------------- nav
 
-function navLink(hash, label, count) {
-  const active = location.hash === hash || (hash !== '#/search' && location.hash.startsWith(hash));
-  return h('a', { class: 'nav__link', href: hash, ...(active ? { 'aria-current': 'page' } : {}) },
-    h('span', { class: 'nav__dot' }),
+function navLink(hash, label, { count = null, n = null, sub = false, done = false } = {}) {
+  const active = location.hash === hash
+    || (hash !== '#/search' && hash && location.hash.startsWith(hash));
+  return h('a', {
+    class: `nav__link${sub ? ' nav__link--sub' : ''}`,
+    href: hash,
+    ...(active ? { 'aria-current': 'page' } : {}),
+  },
+    n !== null ? h('span', { class: 'nav__n', text: n }) : h('span', { class: 'nav__dot' }),
     h('span', { text: label }),
-    count !== undefined && count !== null ? h('span', { class: 'nav__count tnum', text: String(count) }) : null);
+    done ? icon('check', { size: 11, stroke: 'var(--ink-4)', width: 2.4 }) : null,
+    count !== null && count !== undefined
+      ? h('span', { class: 'nav__count tnum', text: String(count) }) : null);
 }
 
 function renderNav() {
   const nav = document.getElementById('nav');
   if (!nav) return;
   clear(nav);
-  const slug = state.activeRun?.slug;
-  const enc = slug ? encodeURIComponent(slug) : null;
-  const leadCount = state.activeRun?.leads ?? null;
-  const toCall = state.activeRun?.toCall ?? null;
-
   nav.appendChild(h('div', { class: 'nav__mark', text: 'web-leads' }));
-  nav.appendChild(h('div', { class: 'nav__group', text: 'Pipeline' }));
-  nav.appendChild(navLink('#/search', 'New search'));
-  if (enc) {
-    nav.appendChild(navLink(`#/checking/${enc}`, 'Check sites', state.activeRun.needsCheck || null));
-    nav.appendChild(navLink(`#/leads/${enc}`, 'Call list', leadCount));
-    nav.appendChild(navLink(`#/call/${enc}`, 'Call mode', toCall));
+
+  // A running job stays visible from every screen, not just the one that
+  // started it.
+  for (const label of jobs.values()) {
+    nav.appendChild(h('div', { class: 'nav__job' },
+      icon('spinner', { size: 12, cls: 'spin', width: 2.2 }),
+      h('span', { text: label })));
   }
+
+  nav.appendChild(h('div', { class: 'nav__group', text: 'Pipeline' }));
+  const r = state.activeRun;
+  const enc = r ? encodeURIComponent(r.slug) : null;
+  for (const s of pipeline()) {
+    if (!s.enabled) continue;
+    nav.appendChild(navLink(s.hash, s.label, { n: s.n, count: s.count, done: s.done }));
+    // Call mode is how stage 3 is worked, not a stage of its own.
+    if (s.key === 'call' && enc) {
+      nav.appendChild(navLink(`#/call/${enc}`, 'Call mode', { sub: true }));
+    }
+  }
+
   nav.appendChild(h('div', { class: 'nav__group', text: 'Records' }));
-  nav.appendChild(navLink('#/history', 'Call history', state.historyCount ?? null));
-  nav.appendChild(navLink('#/runs', 'Searches', state.runs.length || null));
-  if (enc) nav.appendChild(navLink(`#/email/${enc}`, 'Cold email'));
+  nav.appendChild(navLink('#/history', 'Call history', { count: state.historyCount ?? null }));
+  nav.appendChild(navLink('#/runs', 'Searches', { count: state.runs.length || null }));
 }
 
 // ---------------------------------------------------------------- render
@@ -162,21 +254,31 @@ async function render() {
 
   if (current?.destroy) { try { current.destroy(); } catch { /* view teardown is best-effort */ } }
   current = null;
-  renderNav();
+
+  // Counts in the nav and strip must reflect what just happened (an outcome
+  // logged, a check finished), so state is refreshed on every navigation.
+  try { await refresh(); } catch { renderNav(); }
+
   clear(root);
-  root.appendChild(h('div', { class: 'skeleton', style: { height: '18px', width: '160px' } }));
+  const stage = stageForPath(path);
+  // Call mode is deliberately stripless: full-bleed, heads-down, its own
+  // progress bar.
+  if (stage && !path.startsWith('/call/')) root.appendChild(stageStrip(stage));
+  const inner = h('div');
+  root.appendChild(inner);
+  inner.appendChild(h('div', { class: 'skeleton', style: { height: '18px', width: '160px' } }));
 
   try {
     const mod = await import(`./views/${route.r.view}.js`);
     current = mod;
-    clear(root);
-    await mod.render(root, {
+    clear(inner);
+    await mod.render(inner, {
       api, state, navigate, toast, refresh,
       ...route.r.args(route.m),
     });
   } catch (err) {
-    clear(root);
-    root.appendChild(errorPane(err));
+    clear(inner);
+    inner.appendChild(errorPane(err));
   }
   root.scrollIntoView?.({ block: 'start' });
 }

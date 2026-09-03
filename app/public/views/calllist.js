@@ -235,28 +235,42 @@ function screen(data, ctx) {
   const subtitleParts = [runMeta.location, fmtDate(runMeta.date), callable.length ? 'ranked strongest first' : null]
     .filter(Boolean).join('  ·  ');
 
+  // The one thing this screen is for: working the phone. Everything else in
+  // the header is context.
+  const uncalled = callable.filter((l) => !l.outcome).length;
   view.appendChild(h('div', { class: 'head-row', style: { marginTop: '18px' } },
     h('div', {},
       h('h1', { class: 'title title--lg', text: sentence(runMeta.niche) || slug }),
       h('p', { class: 'subtitle', text: subtitleParts })),
     h('div', {
       style: {
-        textAlign: 'right', fontSize: '13.5px', color: 'var(--ink-3)',
-        lineHeight: '1.7', paddingBottom: '4px',
+        display: 'flex', flexDirection: 'column', alignItems: 'flex-end',
+        gap: '12px', paddingBottom: '4px',
       },
     },
       h('div', {
-        text: all.length
-          ? `${all.length} pulled  ·  ${checkedLeads.length
-            ? `${checkedLeads.length} ${checkedLeads.length === 1 ? 'site' : 'sites'} checked`
-            : 'no sites checked yet'}`
-          : 'nothing pulled',
-      }),
-      all.length
-        ? h('div', {
-          style: { color: 'var(--ink-4)' },
-          text: `${dropped.length} dropped as healthy  ·  ${callable.length} worth calling`,
-        })
+        style: {
+          textAlign: 'right', fontSize: '13.5px', color: 'var(--ink-3)',
+          lineHeight: '1.7',
+        },
+      },
+        h('div', {
+          text: all.length
+            ? `${all.length} pulled  ·  ${checkedLeads.length
+              ? `${checkedLeads.length} ${checkedLeads.length === 1 ? 'site' : 'sites'} checked`
+              : 'no sites checked yet'}`
+            : 'nothing pulled',
+        }),
+        all.length
+          ? h('div', {
+            style: { color: 'var(--ink-4)' },
+            text: `${dropped.length} dropped as healthy  ·  ${callable.length} worth calling`,
+          })
+          : null),
+      uncalled
+        ? h('a', { class: 'btn btn--primary', href: `#/call/${encodeURIComponent(slug)}` },
+          icon('phone', { size: 15, stroke: 'var(--accent-ink)' }),
+          h('span', { text: `Start calling  ·  ${uncalled} to go` }))
         : null)));
 
   // ----------------------------------------------------- chips + summary
@@ -454,9 +468,20 @@ function emptyBlock(iconName, title, body) {
     h('p', { class: 'empty__body', style: { maxWidth: '460px', margin: '7px auto 0' }, text: body }));
 }
 
-/** The dropped list and the honest note about what stage 2 actually did. */
+/** The dropped list and the honest note about what stage 2 actually did.
+ *  Neither is needed to decide who to call next, so both live behind a fold —
+ *  the summary line carries the numbers, the detail is one tap away. */
 function footer(dropped, checkedLeads, all) {
-  const wrap = h('div', { style: { display: 'flex', gap: '72px', marginTop: '38px', flexWrap: 'wrap' } });
+  const fold = h('details', { class: 'fold', style: { marginTop: '38px' } },
+    h('summary', {},
+      h('span', { class: 'fold__chev' },
+        icon('chevronRight', { size: 11, stroke: 'var(--ink-4)', width: 2.2 })),
+      h('span', {
+        class: 'eyebrow',
+        text: `${dropped.length} dropped as healthy  ·  what was actually checked`,
+      })));
+
+  const wrap = h('div', { style: { display: 'flex', gap: '72px', marginTop: '4px', flexWrap: 'wrap' } });
 
   const left = h('div', { style: { flex: '1', minWidth: '320px' } },
     h('div', { class: 'eyebrow', text: 'Dropped — not leads' }));
@@ -485,7 +510,8 @@ function footer(dropped, checkedLeads, all) {
 
   wrap.appendChild(left);
   wrap.appendChild(right);
-  return wrap;
+  fold.appendChild(wrap);
+  return fold;
 }
 
 function caveat(checkedLeads, all) {

@@ -278,21 +278,27 @@ function screen(data, ctx, s) {
     h('div', { class: 'empty__title', text: 'Nothing sent yet' }),
     h('p', { class: 'empty__body', text: 'Sent, opened and replied counts appear here once the campaign starts.' })));
 
-  right.appendChild(h('div', { class: 'panel', style: { marginTop: '24px' } },
-    h('p', { style: { fontSize: '12.5px', lineHeight: '1.65', color: '#6b6558' } },
-      'Replies land in Instantly’s inbox, not here. When one comes in, mark the lead ',
-      h('span', { style: { fontWeight: '600' }, text: 'Interested' }),
-      ' on the call list so both halves stay in step.')));
-
-  right.appendChild(h('div', { class: 'note', style: { marginTop: '24px' } },
-    h('div', { class: 'note__title' },
-      icon('alert', { size: 14, stroke: '#8a4a24', width: 2 }),
-      h('span', { text: 'Before the first send' })),
-    h('p', {
-      class: 'note__body',
-      text: 'A real postal address and a working unsubscribe link are on every step. Fill both in — they are what keeps '
-        + 'the sending domain alive.',
-    })));
+  // Advice, not status — needed before the first send, not while deciding who
+  // to scan. One fold keeps the rail scannable.
+  right.appendChild(h('details', { class: 'fold', style: { marginTop: '24px' } },
+    h('summary', {},
+      h('span', { class: 'fold__chev' },
+        icon('chevronRight', { size: 11, stroke: 'var(--ink-4)', width: 2.2 })),
+      h('span', { class: 'eyebrow', text: 'Before the first send' })),
+    h('div', { class: 'panel', style: { marginTop: '12px' } },
+      h('p', { style: { fontSize: '12.5px', lineHeight: '1.65', color: '#6b6558' } },
+        'Replies land in Instantly’s inbox, not here. When one comes in, mark the lead ',
+        h('span', { style: { fontWeight: '600' }, text: 'Interested' }),
+        ' on the call list so both halves stay in step.')),
+    h('div', { class: 'note', style: { marginTop: '12px' } },
+      h('div', { class: 'note__title' },
+        icon('alert', { size: 14, stroke: '#8a4a24', width: 2 }),
+        h('span', { text: 'Before the first send' })),
+      h('p', {
+        class: 'note__body',
+        text: 'A real postal address and a working unsubscribe link are on every step. Fill both in — they are what keeps '
+          + 'the sending domain alive.',
+      }))));
 
   // ------------------------------------------------------------- state
   let selected = emailable[0] || null;
