@@ -1,0 +1,158 @@
+{
+  "ChIJt5Rn2pTGw4kRDemoPlumb004": {
+    "place_id": "ChIJt5Rn2pTGw4kRDemoPlumb004",
+    "url": "http://www.gardenstatedrainpros.com",
+    "finalUrl": "http://www.gardenstatedrainpros.com",
+    "ok": false,
+    "tier": "dead_site",
+    "reason": "Their domain no longer resolves - the site Google links to is unreachable in any browser.",
+    "signals": [
+      {
+        "id": "dead",
+        "label": "Unreachable",
+        "found": true,
+        "evidence": "DNS lookup fails: NXDOMAIN. No server answers for this domain."
+      }
+    ]
+  },
+  "ChIJx4Hu8tTGw4kRDemoPlumb008": {
+    "place_id": "ChIJx4Hu8tTGw4kRDemoPlumb008",
+    "url": "http://www.bianchibrosplumbing.com",
+    "finalUrl": "http://www.bianchibrosplumbing.com/",
+    "ok": true,
+    "tier": "very_dated",
+    "reason": "No mobile version (no viewport tag in the page source), still on http so Chrome shows \"Not secure\" to every visitor, and the footer copyright still reads 2014.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": true,
+        "evidence": "Serves over http:// only, so Chrome flags every visit as Not secure."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": true,
+        "evidence": "No viewport meta in the page source - the desktop layout is served to phones."
+      },
+      {
+        "id": "stale_year",
+        "label": "Stale copyright year",
+        "found": true,
+        "evidence": "Footer reads \"(c) 2014 Bianchi Bros Plumbing\"."
+      }
+    ]
+  },
+  "ChIJz6Jv0uTGw4kRDemoPlumb009": {
+    "place_id": "ChIJz6Jv0uTGw4kRDemoPlumb009",
+    "url": "https://www.raritanvalleymechanical.com",
+    "finalUrl": "https://www.raritanvalleymechanical.com/",
+    "ok": true,
+    "tier": "somewhat_dated",
+    "reason": "The footer copyright still reads 2019 and the news page's newest entry is from the same year.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Valid certificate, redirects http to https."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Viewport tag present."
+      },
+      {
+        "id": "stale_year",
+        "label": "Stale copyright year",
+        "found": true,
+        "evidence": "Footer reads \"(c) 2019\". Newest dated content is from 2019 too."
+      }
+    ]
+  },
+  "ChIJa8Kw2vTGw4kRDemoPlumb010": {
+    "place_id": "ChIJa8Kw2vTGw4kRDemoPlumb010",
+    "url": "https://www.proflowplumbingnj.com",
+    "finalUrl": "https://www.proflowplumbingnj.com/",
+    "ok": true,
+    "tier": "not_a_lead",
+    "reason": "Modern responsive site on HTTPS, current copyright, online booking - nothing to pitch.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Valid certificate."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Viewport tag present."
+      },
+      {
+        "id": "stale_year",
+        "label": "Stale copyright year",
+        "found": false,
+        "evidence": "Footer shows the current year."
+      }
+    ]
+  },
+  "ChIJc0Lx4wTGw4kRDemoPlumb011": {
+    "place_id": "ChIJc0Lx4wTGw4kRDemoPlumb011",
+    "url": "https://www.milltownplumbing.com",
+    "finalUrl": "https://www.milltownplumbing.com/",
+    "ok": true,
+    "tier": "somewhat_dated",
+    "reason": "Mobile version exists but half the photos are broken links, and the specials page was last updated in 2021.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Valid certificate."
+      },
+      {
+        "id": "stale_year",
+        "label": "Stale content",
+        "found": true,
+        "evidence": "Specials page banner is dated 2021; footer year is current (likely scripted)."
+      },
+      {
+        "id": "broken_assets",
+        "label": "Broken images",
+        "found": true,
+        "evidence": "6 of 14 gallery images return 404."
+      }
+    ]
+  },
+  "ChIJe2My6xTGw4kRDemoPlumb012": {
+    "place_id": "ChIJe2My6xTGw4kRDemoPlumb012",
+    "url": "https://www.reyessewernj.com",
+    "finalUrl": "https://www.reyessewernj.com/",
+    "ok": true,
+    "tier": "not_a_lead",
+    "reason": "Recent responsive build with live chat and this year in the footer - healthy.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Valid certificate."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": false,
+        "evidence": "Viewport tag present."
+      },
+      {
+        "id": "stale_year",
+        "label": "Stale copyright year",
+        "found": false,
+        "evidence": "Footer shows the current year."
+      }
+    ]
+  }
+}

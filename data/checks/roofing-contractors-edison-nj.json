@@ -1,0 +1,52 @@
+{
+  "ChIJl0R21bTGw4kRDemoRoofr004": {
+    "place_id": "ChIJl0R21bTGw4kRDemoRoofr004",
+    "url": "http://www.raritanroofing.com",
+    "finalUrl": "http://www.raritanroofing.com/",
+    "ok": true,
+    "tier": "very_dated",
+    "reason": "Still on http so Chrome shows \"Not secure\" to every visitor, and the site is a table-based layout with the footer reading 2011.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": true,
+        "evidence": "Serves over http:// only."
+      },
+      {
+        "id": "no_viewport",
+        "label": "No viewport meta tag",
+        "found": true,
+        "evidence": "Table-based layout, no viewport tag."
+      },
+      {
+        "id": "stale_year",
+        "label": "Stale copyright year",
+        "found": true,
+        "evidence": "Footer reads \"(c) 2011 Raritan Roofing\"."
+      }
+    ]
+  },
+  "ChIJp4T65dTGw4kRDemoRoofr006": {
+    "place_id": "ChIJp4T65dTGw4kRDemoRoofr006",
+    "url": "https://www.middlesexroofmasters.com",
+    "finalUrl": "https://www.middlesexroofmasters.com/",
+    "ok": true,
+    "tier": "not_a_lead",
+    "reason": "Responsive site on HTTPS with current-year footer and a live estimate form - healthy.",
+    "signals": [
+      {
+        "id": "no_https",
+        "label": "No HTTPS",
+        "found": false,
+        "evidence": "Valid certificate."
+      },
+      {
+        "id": "stale_year",
+        "label": "Stale copyright year",
+        "found": false,
+        "evidence": "Current year."
+      }
+    ]
+  }
+}
