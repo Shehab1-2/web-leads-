@@ -104,3 +104,64 @@ call-lists/                      finished, ranked call lists
 `data/seen_leads.csv` has an empty `status` column for tracking call outcomes.
 Do not clear it - it is what keeps repeat searches from returning the same
 businesses.
+
+## Status
+
+### Implemented
+
+- Stage 1 (search + pre-classify) as dependency-free Node, reproducing the
+  Python's tiers 16/16; stage 2 (site checking) as real code with a 13-case
+  adversarial suite; stage 3 ranking with healthy sites cut.
+- The full UI: search, checking, call list (filter/search/sort/export), site
+  check detail with per-lead activity trail, call mode with keyboard-first
+  outcomes and notes, history, searches, cold email (bucketing, address scan,
+  drafts), settings.
+- Workflow spine: stage strip + numbered nav with live counts, running-job
+  indicator, state refreshed per navigation.
+- Persistence with hard safety rails: append-only outcomes log,
+  `seen_leads.csv` writer that refuses to drop a row, atomic writes.
+- Railway deployment (password gate, `DATA_DIR` volume, health check).
+- Two zero-dependency checks: `app/tools/render-check.mjs` (mounts every view
+  against the live server) and `app/tools/sitecheck-adversarial.mjs`.
+
+### Scaffolded
+
+- Settings lists them honestly: team members, webhooks, scheduled searches /
+  re-checks, reporting. Surface exists, nothing behind it.
+- Instantly push: implemented from their v2 docs, never verified against a
+  live account; fails loudly when unconfigured.
+- Demo seeding (`app/tools/seed-demo.mjs`): must only ever point at a
+  throwaway `DATA_DIR`, never the repo's own `data/`.
+
+### Recommended next
+
+1. Run a second real search (different trade or town) — unlocks the cross-run
+   comparison on Searches and makes History's filters earn their keep.
+2. Scheduled re-checks with a verdict diff — stale verdicts are proven real
+   (a lead fixed its TLS between check and call).
+3. Verify the Instantly push against a live account before first use.
+4. Address-scan → draft → push as one guided flow on the email screen.
+
+### Technical debt
+
+- Verdicts for visual signals are capped without a browser; checks are the
+  conservative floor by design, but a headless-screenshot pass would lift it.
+- The job indicator is client-side; a tab reload loses it (server 409 guard
+  still prevents double-runs).
+- Stage-1 live path (Apify round trip) is untested end-to-end — the token
+  never reaches CI-like sessions; the classifier is verified against the
+  recorded run instead.
+- CSV is the database. Deliberate (grep-able, git-diffable, no deps) — but
+  multi-user or thousands of rows would want SQLite.
+
+### Architecture
+
+`app/server.mjs` (node:http, SSE for long jobs) serves `app/public/` and a
+JSON API. `app/lib/` is the domain: `apify` (stage 1), `sitecheck` (stage 2),
+`rank` (the ordering that is the product), `email`, `store` (every disk
+write; the only module that touches `data/`). The frontend is vanilla ES
+modules — `app.js` shell (router, nav, spine) + one module per view in
+`views/`, all DOM built through `dom.js`'s `h()` so third-party strings can
+never become markup. `data/` is the state: one CSV+JSON per run, per-signal
+detail in `checks/`, append-only `call_outcomes.csv`, and `seen_leads.csv`
+as the permanent memory between searches.
