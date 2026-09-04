@@ -483,7 +483,55 @@ function rightColumn(lead, check, tier, runMeta, ctx) {
 
   // ---------------------------------------------------------- the facts
   col.appendChild(factsRow(lead, check, runMeta.date || ''));
+
+  // --------------------------------------------------------- activity
+  // Every outcome ever logged for this business, from the append-only log —
+  // what happened on each call, not just the latest state.
+  const activityEl = h('div', { style: { marginTop: '30px' } });
+  col.appendChild(activityEl);
+  activityEl.appendChild(h('div', { class: 'eyebrow', text: 'Activity' }));
+  const actBody = h('div', { style: { marginTop: '11px' } });
+  activityEl.appendChild(actBody);
+  actBody.appendChild(h('div', { class: 'skeleton', style: { height: '14px', width: '140px' } }));
+  ctx.api.activity(lead.place_id).then(({ rows }) => {
+    clear(actBody);
+    if (!rows.length) {
+      actBody.appendChild(h('p', {
+        style: { fontSize: '13px', color: 'var(--ink-4)' },
+        text: 'No calls logged yet.',
+      }));
+      return;
+    }
+    for (const r of rows) {
+      actBody.appendChild(h('div', {
+        style: {
+          display: 'flex', alignItems: 'baseline', gap: '12px',
+          padding: '8px 0', borderBottom: '1px solid var(--rule-soft)', fontSize: '13px',
+        },
+      },
+        h('span', {
+          class: 'mono tnum',
+          style: { fontSize: '11.5px', color: 'var(--ink-4)', flexShrink: '0' },
+          text: fmtWhen(r.at),
+        }),
+        h('span', { style: { fontWeight: '500', flexShrink: '0' }, text: STATUS_LABEL[r.status] || r.status }),
+        r.note ? h('span', { style: { color: 'var(--ink-3)' }, text: r.note }) : null));
+    }
+  }).catch(() => {
+    clear(actBody);
+    actBody.appendChild(h('p', {
+      style: { fontSize: '13px', color: 'var(--ink-4)' },
+      text: 'Could not load the call log.',
+    }));
+  });
   return col;
+}
+
+function fmtWhen(iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso || '';
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+    + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
 
 function groupHeading(text, marginTop) {

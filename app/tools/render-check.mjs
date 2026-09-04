@@ -200,6 +200,7 @@ const api = {
   search: track('search', async () => ({})),
   check: track('check', async () => ({})),
   scanEmails: track('scanEmails', async () => ({})),
+  activity: track('activity', (id) => json('GET', `/api/activity/${encodeURIComponent(id)}`)),
 };
 
 // ---------------------------------------------------------------------- run
@@ -212,6 +213,7 @@ const VIEWS = [
   ['search', {}], ['checking', { slug }], ['calllist', { slug }],
   ['sitecheck', { slug, placeId: 'ChIJS6rhzvDHw4kRosAmkvUWSCU' }],
   ['callmode', { slug }], ['history', {}], ['runs', {}], ['email', { slug }],
+  ['settings', {}],
 ];
 
 let pass = 0; const failures = [];

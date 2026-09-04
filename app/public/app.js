@@ -85,6 +85,7 @@ export const api = {
   runs: () => json('GET', '/api/runs'),
   run: (slug) => json('GET', `/api/runs/${encodeURIComponent(slug)}`),
   history: () => json('GET', '/api/history'),
+  activity: (placeId) => json('GET', `/api/activity/${encodeURIComponent(placeId)}`),
   email: (slug) => json('GET', `/api/email/${encodeURIComponent(slug)}`),
   outcome: (body) => json('POST', '/api/outcome', body),
   search: tracked('search', 'Searching…',
@@ -105,6 +106,7 @@ const ROUTES = [
   { re: /^\/call\/(.+)$/, view: 'callmode', args: (m) => ({ slug: dec(m[1]) }) },
   { re: /^\/history$/, view: 'history', args: () => ({}) },
   { re: /^\/runs$/, view: 'runs', args: () => ({}) },
+  { re: /^\/settings$/, view: 'settings', args: () => ({}) },
   { re: /^\/email\/(.+)$/, view: 'email', args: (m) => ({ slug: dec(m[1]) }) },
 ];
 
@@ -235,6 +237,7 @@ function renderNav() {
   nav.appendChild(h('div', { class: 'nav__group', text: 'Records' }));
   nav.appendChild(navLink('#/history', 'Call history', { count: state.historyCount ?? null }));
   nav.appendChild(navLink('#/runs', 'Searches', { count: state.runs.length || null }));
+  nav.appendChild(navLink('#/settings', 'Settings', {}));
 }
 
 // ---------------------------------------------------------------- render

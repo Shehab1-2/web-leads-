@@ -212,6 +212,8 @@ function screen(data, ctx) {
 
   const view = h('div', {});
   let filter = 'all';
+  let query = '';
+  let sortBy = 'rank'; // rank | reviews | name
 
   // ------------------------------------------------------------ header
   view.appendChild(h('div', {
@@ -282,13 +284,40 @@ function screen(data, ctx) {
 
   // Nothing to filter or tally when no row reached a lead tier — the empty
   // state below says why, and a row of zeroes would only be noise.
+  // Search, sort and export sit with the tally: find a lead by name while the
+  // phone is ringing, reorder when review count matters more than tier, take
+  // the working list with you.
+  const searchEl = h('input', {
+    class: 'field field--sm',
+    type: 'search',
+    placeholder: 'Find a lead',
+    'aria-label': 'Find a lead by name, street or opener',
+    style: { width: '190px', marginTop: '0' },
+    onInput: (e) => { query = (e.target.value || '').trim().toLowerCase(); paintRows(); },
+  });
+  const sortEl = h('select', {
+    class: 'field field--sm',
+    'aria-label': 'Sort order',
+    style: { width: 'auto', marginTop: '0' },
+    onChange: (e) => { sortBy = e.target.value; paintRows(); },
+  },
+    h('option', { value: 'rank', text: 'Strongest first' }),
+    h('option', { value: 'reviews', text: 'Most reviews' }),
+    h('option', { value: 'name', text: 'Name A–Z' }));
+  const exportBtn = h('button', {
+    type: 'button', class: 'btn btn--quiet btn--sm',
+    onClick: () => exportCsv(),
+  }, icon('download', { size: 13 }), 'Export CSV');
+
   if (callable.length) {
     view.appendChild(h('div', {
       style: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         gap: '32px', marginTop: '34px', paddingBottom: '22px', flexWrap: 'wrap',
       },
-    }, chipRow, summaryEl));
+    }, chipRow,
+      h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' } },
+        summaryEl, searchEl, sortEl, exportBtn)));
   }
 
   const rowsEl = h('div', { style: callable.length ? null : { marginTop: '34px' } });
@@ -359,16 +388,57 @@ function screen(data, ctx) {
       return;
     }
 
-    const visible = filter === 'all' ? callable : callable.filter((l) => effectiveTier(l) === filter);
+    let visible = filter === 'all' ? callable : callable.filter((l) => effectiveTier(l) === filter);
+    if (query) {
+      visible = visible.filter((l) => [l.name, l.reason, l.address, l.category]
+        .some((v) => String(v || '').toLowerCase().includes(query)));
+    }
+    if (sortBy === 'reviews') {
+      visible = [...visible].sort((a, b) => (Number(b.reviews) || 0) - (Number(a.reviews) || 0));
+    } else if (sortBy === 'name') {
+      visible = [...visible].sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+    }
     if (!visible.length) {
-      rowsEl.appendChild(emptyBlock('list', `No leads in ${TIER_LABEL[filter] || filter}`,
-        'Nothing in this run scored that tier. Clear the filter to see the whole call order.'));
+      rowsEl.appendChild(query
+        ? emptyBlock('search', `Nothing matches “${query}”`,
+          'No lead name, street, category or opener contains that. Clear the search to see the list again.')
+        : emptyBlock('list', `No leads in ${TIER_LABEL[filter] || filter}`,
+          'Nothing in this run scored that tier. Clear the filter to see the whole call order.'));
       return;
     }
 
     visible.forEach((lead, i) => {
       rowsEl.appendChild(leadRow(lead, rankOf.get(lead.place_id) || i + 1, i === visible.length - 1));
     });
+  }
+
+  /** The working list as a file — what is on screen right now (filter, search
+   *  and sort applied), with the call status and note alongside. */
+  function exportCsv() {
+    let rows = filter === 'all' ? callable : callable.filter((l) => effectiveTier(l) === filter);
+    if (query) {
+      rows = rows.filter((l) => [l.name, l.reason, l.address, l.category]
+        .some((v) => String(v || '').toLowerCase().includes(query)));
+    }
+    const esc = (v) => {
+      const s = v === null || v === undefined ? '' : String(v);
+      return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = ['rank', 'tier', 'name', 'phone', 'address', 'reviews', 'opener', 'status', 'note'];
+    const lines = [header.join(',')];
+    for (const l of rows) {
+      lines.push([
+        rankOf.get(l.place_id) || '', effectiveTier(l), l.name, l.phone, l.address,
+        l.reviews ?? '', l.reason || '', statuses[l.place_id] || 'not_called',
+        (l.outcome && l.outcome.note) || '',
+      ].map(esc).join(','));
+    }
+    const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv;charset=utf-8' });
+    const a = h('a', { href: URL.createObjectURL(blob), download: `call-list-${slug}.csv` });
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    ctx.toast(`Exported ${rows.length} ${rows.length === 1 ? 'lead' : 'leads'}`);
   }
 
   function leadRow(lead, rank, isLast) {
@@ -415,7 +485,19 @@ function screen(data, ctx) {
         : h('div', { class: 'lead__nophone' },
           icon('phoneOff', { size: 14, stroke: '#c4bba9', width: 1.8 }),
           'No phone listed'),
-      chipSlot);
+      chipSlot,
+      // A note written in call mode surfaces here, so what they said is one
+      // glance away next time the list is worked.
+      lead.outcome && lead.outcome.note
+        ? h('div', {
+          class: 'serif',
+          style: {
+            fontSize: '13.5px', fontStyle: 'italic', color: 'var(--ink-3)',
+            maxWidth: '230px', textAlign: 'right', lineHeight: '1.5',
+          },
+          text: `“${lead.outcome.note}”`,
+        })
+        : null);
     row.appendChild(side);
 
     mountChip(chipSlot, lead, row);

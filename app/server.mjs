@@ -17,7 +17,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import * as store from './lib/store.mjs';
-import { rankLeads, countByTier, effectiveTier, isLead } from './lib/rank.mjs';
+import { rankLeads, countByTier, effectiveTier, isLead, TIER_LABEL, STAGE1_TIERS, TIER_ORDER } from './lib/rank.mjs';
 import * as apify from './lib/apify.mjs';
 import { checkAll } from './lib/sitecheck.mjs';
 import * as mail from './lib/email.mjs';
@@ -130,6 +130,11 @@ function config() {
     apifyToken: Boolean((process.env.APIFY_API_TOKEN || '').trim()),
     instantly: Boolean(instantly.configured),
     instantlyDetail: instantly,
+    passwordSet: Boolean(PASSWORD),
+    onPlatform: ON_PLATFORM,
+    // A path, not a secret — the Settings page shows where the data lives.
+    dataDir: store.DATA_DIR,
+    dataDirIsRepo: store.DATA_DIR === store.REPO_DATA_DIR,
   };
 }
 
@@ -181,6 +186,32 @@ function guard(key) {
   return () => running.delete(key);
 }
 
+/** The finished call list, in the format call-lists/ has always used. */
+function callListMarkdown(meta, leads, date) {
+  const ranked = rankLeads(leads);
+  const callable = ranked.filter((l) => isLead(effectiveTier(l)));
+  const dropped = ranked.length - callable.length;
+  const lines = [
+    `# ${meta.niche || 'leads'} — ${meta.location || ''} — ${date}`,
+    '',
+    `Ranked strongest-first. ${callable.length} callable lead(s) from ${ranked.length} pulled; ${dropped} healthy site(s) dropped.`,
+    '',
+  ];
+  callable.forEach((l, i) => {
+    const tier = effectiveTier(l);
+    lines.push(`## ${i + 1}. ${l.name} — ${l.phone || 'no phone listed'}`);
+    const bits = [TIER_LABEL[tier] || tier];
+    if (l.rating) bits.push(`${l.rating}★ (${l.reviews || 0} reviews)`);
+    lines.push(`- ${bits.join(' · ')}`);
+    if (l.address) lines.push(`- ${l.address}`);
+    if (l.website) lines.push(`- ${l.website}`);
+    if (l.reason) lines.push(`- Opener: ${l.reason}`);
+    if (l.maps_url) lines.push(`- ${l.maps_url}`);
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+
 // ------------------------------------------------------------------- routes
 
 async function api(req, res, pathname) {
@@ -198,6 +229,113 @@ async function api(req, res, pathname) {
   }
 
   let m;
+
+  // Export a run as the finished call list. Markdown follows the repo's
+  // call-lists/ convention; csv streams the run file as-is. ?save=1 also
+  // writes the markdown into call-lists/ on the server. Matched before the
+  // generic run route — its greedy (.+) would swallow this path.
+  if (method === 'GET' && (m = pathname.match(/^\/api\/runs\/([^/]+)\/export\.(md|csv)$/))) {
+    const slug = decodeURIComponent(m[1]);
+    await requireRun(slug);
+    const { meta, leads } = await store.readRun(slug);
+    const date = meta.date || new Date().toISOString().slice(0, 10);
+    const base = `${store.slugify(meta.niche || slug, meta.location || '')}-${date}`;
+    if (m[2] === 'csv') {
+      const csv = await fs.readFile(store.runCsvPath(slug), 'utf8');
+      res.writeHead(200, {
+        'content-type': 'text/csv; charset=utf-8',
+        'content-disposition': `attachment; filename="${base}.csv"`,
+        'cache-control': 'no-store',
+      });
+      return res.end(csv);
+    }
+    const md = callListMarkdown(meta, leads, date);
+    const url = new URL(req.url, 'http://127.0.0.1');
+    if (url.searchParams.get('save') === '1') {
+      const dir = path.join(store.ROOT, 'call-lists');
+      await fs.mkdir(dir, { recursive: true });
+      await fs.writeFile(path.join(dir, `${base}.md`), md, 'utf8');
+    }
+    res.writeHead(200, {
+      'content-type': 'text/markdown; charset=utf-8',
+      'content-disposition': `attachment; filename="${base}.md"`,
+      'cache-control': 'no-store',
+    });
+    return res.end(md);
+  }
+
+  // Add a hand-entered lead — a referral, a business spotted on foot.
+  if (method === 'POST' && (m = pathname.match(/^\/api\/runs\/([^/]+)\/leads$/))) {
+    const slug = decodeURIComponent(m[1]);
+    await requireRun(slug);
+    const body = await readBody(req);
+    const name = String(body.name || '').trim();
+    const phone = String(body.phone || '').trim();
+    if (!name) return fail(res, 400, 'A business name is required.');
+    if (!phone) return fail(res, 400, 'A phone number is required — the list exists to be called.');
+    const website = String(body.website || '').trim();
+    const tier = String(body.tier || '').trim() || (website ? 'needs_check' : 'no_website');
+    if (![...STAGE1_TIERS, ...TIER_ORDER].includes(tier)) return fail(res, 400, `unknown tier: ${tier}`);
+    if (tier !== 'no_website' && !website && tier !== 'needs_check') {
+      return fail(res, 400, `tier "${tier}" describes a website, but no website was given`);
+    }
+    const lead = {
+      tier, name, phone,
+      address: String(body.address || '').trim(),
+      city: String(body.city || '').trim(),
+      category: String(body.category || '').trim(),
+      website,
+      rating: '', reviews: '',
+      maps_url: '',
+      place_id: `manual_${crypto.randomBytes(8).toString('hex')}`,
+      checked_tier: '',
+      reason: String(body.reason || '').trim()
+        || (tier === 'no_website' ? 'Added by hand — no website.' : 'Added by hand.'),
+    };
+    const row = await store.addLead(slug, lead);
+    const meta2 = await store.readRunMeta(slug);
+    await store.appendSeen([row], meta2.niche || '', meta2.location || '', new Date().toISOString().slice(0, 10));
+    return ok(res, { lead: row });
+  }
+
+  // Correct a lead by hand — a phone that changed, a verdict that was wrong.
+  if (method === 'PATCH' && (m = pathname.match(/^\/api\/runs\/([^/]+)\/leads\/(.+)$/))) {
+    const slug = decodeURIComponent(m[1]);
+    await requireRun(slug);
+    const body = await readBody(req);
+    const fields = {};
+    for (const k of store.EDITABLE_FIELDS) if (body[k] !== undefined) fields[k] = body[k];
+    if (!Object.keys(fields).length) {
+      return fail(res, 400, `nothing to update — editable fields: ${store.EDITABLE_FIELDS.join(', ')}`);
+    }
+    if (fields.checked_tier !== undefined && fields.checked_tier !== ''
+      && !TIER_ORDER.includes(fields.checked_tier) && fields.checked_tier !== 'not_a_lead') {
+      return fail(res, 400, `unknown tier: ${fields.checked_tier}`);
+    }
+    if (fields.name !== undefined && !String(fields.name).trim()) {
+      return fail(res, 400, 'a lead needs a name');
+    }
+    const lead = await store.updateLead(slug, decodeURIComponent(m[2]), fields);
+    return ok(res, { lead });
+  }
+
+  // Remove one lead from a run. Its seen_leads row stays — removing it from
+  // today's list must not make it resurface in next month's search.
+  if (method === 'DELETE' && (m = pathname.match(/^\/api\/runs\/([^/]+)\/leads\/(.+)$/))) {
+    const slug = decodeURIComponent(m[1]);
+    await requireRun(slug);
+    await store.removeLead(slug, decodeURIComponent(m[2]));
+    return ok(res, { removed: 1 });
+  }
+
+  // Delete a whole run. History and outcomes are untouched.
+  if (method === 'DELETE' && (m = pathname.match(/^\/api\/runs\/([^/]+)$/))) {
+    const slug = decodeURIComponent(m[1]);
+    await requireRun(slug);
+    await store.deleteRun(slug);
+    return ok(res, { deleted: slug });
+  }
+
   if (method === 'GET' && (m = pathname.match(/^\/api\/runs\/(.+)$/))) {
     const slug = decodeURIComponent(m[1]);
     await requireRun(slug);
@@ -223,6 +361,17 @@ async function api(req, res, pathname) {
       counts: countByTier(leads),
       total: leads.length,
     });
+  }
+
+  // The full outcome trail for one business — every call ever logged against
+  // it, oldest first. The outcomes log is append-only, so this is free.
+  if (method === 'GET' && (m = pathname.match(/^\/api\/activity\/(.+)$/))) {
+    const placeId = decodeURIComponent(m[1]);
+    if (!placeId) return fail(res, 400, 'place_id is required');
+    const rows = (await store.readOutcomes())
+      .filter((r) => r.place_id === placeId)
+      .map((r) => ({ at: r.at, status: r.status, note: r.note || '' }));
+    return ok(res, { rows });
   }
 
   if (method === 'GET' && pathname === '/api/history') {
