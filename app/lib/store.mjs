@@ -161,6 +161,68 @@ export async function writeRunVerdicts(slug, verdictsByPlaceId) {
   return updated.length;
 }
 
+/** Rewrite one run's CSV + JSON from a full row set, ranked. */
+async function writeRunRows(slug, rows) {
+  const { rankLeads } = await import('./rank.mjs');
+  const ranked = rankLeads(rows);
+  await writeAtomic(runCsvPath(slug), toCsv(LEAD_COLUMNS, ranked));
+  await writeAtomic(runJsonPath(slug), JSON.stringify(ranked, null, 2) + '\n');
+  return ranked;
+}
+
+/** Fields a manual edit may touch. Everything else is Maps data or a verdict. */
+export const EDITABLE_FIELDS = ['name', 'phone', 'address', 'city', 'category', 'website', 'checked_tier', 'reason'];
+
+export async function updateLead(slug, placeId, fields) {
+  const { rows } = await readCsvObjects(runCsvPath(slug));
+  const i = rows.findIndex((r) => r.place_id === placeId);
+  if (i === -1) throw Object.assign(new Error(`no lead ${placeId} in run ${slug}`), { status: 404 });
+  const patch = {};
+  for (const k of EDITABLE_FIELDS) if (fields[k] !== undefined) patch[k] = String(fields[k]);
+  rows[i] = { ...rows[i], ...patch };
+  await writeRunRows(slug, rows);
+  return rows[i];
+}
+
+/** Add a hand-entered lead to a run — a referral, a business spotted on foot. */
+export async function addLead(slug, lead) {
+  const { rows } = await readCsvObjects(runCsvPath(slug));
+  if (rows.some((r) => r.place_id === lead.place_id)) {
+    throw Object.assign(new Error('that lead is already in this run'), { status: 409 });
+  }
+  const row = {};
+  for (const c of LEAD_COLUMNS) row[c] = lead[c] === undefined || lead[c] === null ? '' : String(lead[c]);
+  rows.push(row);
+  await writeRunRows(slug, rows);
+  return row;
+}
+
+/**
+ * Remove a lead from a run. The run is a working list, so this is allowed;
+ * seen_leads is history and deliberately keeps its row — removing a business
+ * from today's list must not make it resurface in next month's search.
+ */
+export async function removeLead(slug, placeId) {
+  const { rows } = await readCsvObjects(runCsvPath(slug));
+  const kept = rows.filter((r) => r.place_id !== placeId);
+  if (kept.length === rows.length) {
+    throw Object.assign(new Error(`no lead ${placeId} in run ${slug}`), { status: 404 });
+  }
+  await writeRunRows(slug, kept);
+  return rows.length - kept.length;
+}
+
+/**
+ * Delete a whole run — its list, metadata and check details. seen_leads and
+ * the outcomes log are untouched: the businesses were still seen, the calls
+ * were still made.
+ */
+export async function deleteRun(slug) {
+  for (const p of [runCsvPath(slug), runJsonPath(slug), runMetaPath(slug), checksPath(slug)]) {
+    try { await fs.rm(p); } catch { /* absent is fine */ }
+  }
+}
+
 export async function readChecks(slug) {
   if (!(await exists(checksPath(slug)))) return {};
   try { return JSON.parse(await fs.readFile(checksPath(slug), 'utf8')); } catch { return {}; }
