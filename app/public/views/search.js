@@ -13,6 +13,9 @@ export const meta = { title: 'New search' };
 // and are not served to the browser, so the number is repeated, not imported.
 const USD_PER_PLACE = 0.0015;
 
+// Mirrors the cost guard in app/lib/apify.mjs — above this many places the
+// run is confirmed before anything is spent.
+const CONFIRM_OVER = 50;
 const MIN_RESULTS = 5;
 const MAX_RESULTS = 200;
 const STEP = 5;
@@ -42,7 +45,7 @@ export async function render(root, ctx) {
   const config = ctx.state && ctx.state.config ? ctx.state.config : {};
   const tokenMissing = config.apifyToken === false;
 
-  const form = { max: 20, skipSeen: true };
+  const form = { max: 20, skipSeen: true, confirmed: false };
 
   // ------------------------------------------------------------ heading
 
@@ -167,15 +170,53 @@ export async function render(root, ctx) {
     icon('search', { size: 16, stroke: '#fdf4ef', width: 2 }));
   const runBtn = h('button', { class: 'btn btn--primary btn--lg', type: 'submit' }, runIcon, runLabel);
 
+  // Sits above the button and only appears for a run big enough to be worth
+  // a second look at the price. Confirming re-submits; nothing is spent until
+  // it does.
+  const costConfirm = h('div', { class: 'note', style: { display: 'none' } });
+
+  function showCostConfirm(max) {
+    const est = (max * USD_PER_PLACE).toFixed(2);
+    clear(costConfirm);
+    costConfirm.style.display = '';
+    const yes = h('button', { class: 'btn btn--primary btn--sm', type: 'button' },
+      `Yes — scrape ${max} places`);
+    const no = h('button', { class: 'btn btn--quiet btn--sm', type: 'button' }, 'Cancel');
+    yes.addEventListener('click', () => {
+      form.confirmed = true;
+      formEl.dispatchEvent(new Event('submit', { cancelable: true }));
+    });
+    no.addEventListener('click', () => { hideCostConfirm(); nicheInput.focus(); });
+    costConfirm.appendChild(h('div', { class: 'note__title', text: `That is a big run — about ${est}` }));
+    costConfirm.appendChild(h('div', { class: 'note__body' },
+      `${max} places is over the ${CONFIRM_OVER}-place guard. It comes out of your Apify credit, `
+      + 'and nothing has been spent yet.'));
+    costConfirm.appendChild(h('div', {
+      style: { display: 'flex', gap: '10px', marginTop: '14px', flexWrap: 'wrap' },
+    }, yes, no));
+  }
+
+  function hideCostConfirm() {
+    costConfirm.style.display = 'none';
+    clear(costConfirm);
+  }
+
   const submitRow = tokenMissing
     ? tokenNote()
-    : h('div', { style: { display: 'flex', alignItems: 'center', gap: '20px', paddingTop: '6px', flexWrap: 'wrap' } },
-      runBtn,
+    : h('div', {},
+      costConfirm,
       h('div', {
-        class: 'hint',
-        style: { maxWidth: '220px', lineHeight: '1.55', marginTop: '0' },
-        text: 'Takes about a minute. Nothing is written until it finishes.',
-      }));
+        style: {
+          display: 'flex', alignItems: 'center', gap: '20px',
+          paddingTop: '6px', flexWrap: 'wrap', marginTop: '14px',
+        },
+      },
+        runBtn,
+        h('div', {
+          class: 'hint',
+          style: { maxWidth: '220px', lineHeight: '1.55', marginTop: '0' },
+          text: 'Takes about a minute. Nothing is written until it finishes.',
+        })));
 
   const formEl = h('form', {
     style: { width: '588px', maxWidth: '100%', flexShrink: '0', display: 'flex', flexDirection: 'column', gap: '26px' },
@@ -296,6 +337,15 @@ export async function render(root, ctx) {
       return;
     }
 
+    // Runs over the guard threshold cost real credit, so they are confirmed
+    // once, here. apify.mjs refuses them otherwise and a browser has no way to
+    // "re-run with yes: true".
+    if (form.max > CONFIRM_OVER && !form.confirmed) {
+      showCostConfirm(form.max);
+      return;
+    }
+    hideCostConfirm();
+
     s.running = true;
     setBusy(true);
     showRunningRight();
@@ -310,7 +360,7 @@ export async function render(root, ctx) {
 
     try {
       const done = await ctx.api.search(
-        { niche, location, max: form.max, includeSeen: !form.skipSeen },
+        { niche, location, max: form.max, includeSeen: !form.skipSeen, confirm: form.confirmed },
         { log: onMessage, progress: onMessage },
       );
       if (s.dead) return;
@@ -325,6 +375,7 @@ export async function render(root, ctx) {
       if (s.dead) return;
       appendLine(msgOf(err), 'err');
       ctx.toast(msgOf(err), 'err');
+      form.confirmed = false;
       s.running = false;
       setBusy(false);
     }

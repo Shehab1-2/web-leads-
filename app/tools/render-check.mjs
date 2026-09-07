@@ -294,5 +294,42 @@ if (missingClasses.size) {
   console.log('\nCLASSES NOT IN design.css:');
   for (const [v, set] of missingClasses) console.log(`  ${v}: ${[...set].join(', ')}`);
 }
+// ------------------------------------------------------------------- shell
+// The nav is not a view, so nothing above touches it. Boot the real app.js
+// against the real server and assert the chrome actually rendered — a nav that
+// throws leaves a bare page while every per-view check still reports passing.
+
+const navEl = new Element('header');
+navEl.setAttribute('id', 'nav');
+const viewEl = new Element('div');
+viewEl.setAttribute('id', 'view');
+document.body.appendChild(navEl);
+document.body.appendChild(viewEl);
+
+const directFetch = globalThis.fetch;
+globalThis.fetch = (u, o) => directFetch(String(u).startsWith('http') ? String(u) : BASE + String(u), o);
+
+try {
+  await import(APP + 'app.js');
+  // boot() is async: refresh() then render(). Give it room to settle.
+  for (let i = 0; i < 40 && !navEl.textContent.trim(); i++) {
+    await new Promise((r) => setTimeout(r, 50));
+  }
+  const navText = navEl.textContent.replace(/\s+/g, ' ').trim();
+  const navLinks = navEl.querySelectorAll('a');
+  if (!navText) {
+    failures.push(['shell nav', 'rendered nothing — the top bar would be empty in a browser']);
+  } else {
+    console.log(`\nok   nav        ${navLinks.length} link(s)  "${navText.slice(0, 64)}"`);
+    for (const a of navLinks) {
+      for (const c of a._classes()) {
+        if (!cssClasses.has(c)) failures.push(['shell nav', `class .${c} is not in design.css`]);
+      }
+    }
+  }
+} catch (e) {
+  failures.push(['shell nav', 'boot: ' + (e && e.message ? e.message : String(e))]);
+}
+
 console.log(`\napi methods exercised: ${[...new Set(calls)].join(', ')}`);
 process.exit(failures.length ? 1 : 0);

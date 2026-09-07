@@ -449,7 +449,12 @@ async function api(req, res, pathname) {
     const release = guard(`search:${niche}|${location}`);
     const s = openStream(res);
     try {
-      const { leads } = await apify.search({ niche, location, max, token, onProgress: s.log });
+      const { leads } = await apify.search({
+        niche, location, max, token, onProgress: s.log,
+        // The UI asks before a big run; without this the guard in apify.mjs is
+        // unreachable from a browser, which has no way to "re-run with yes".
+        yes: Boolean(body.confirm),
+      });
       let kept = leads;
       let skipped = 0;
       if (!body.includeSeen) {
