@@ -88,6 +88,11 @@ export const api = {
   activity: (placeId) => json('GET', `/api/activity/${encodeURIComponent(placeId)}`),
   email: (slug) => json('GET', `/api/email/${encodeURIComponent(slug)}`),
   outcome: (body) => json('POST', '/api/outcome', body),
+  addLead: (slug, body) => json('POST', `/api/runs/${encodeURIComponent(slug)}/leads`, body),
+  updateLead: (slug, placeId, body) => json('PATCH', `/api/runs/${encodeURIComponent(slug)}/leads/${encodeURIComponent(placeId)}`, body),
+  removeLead: (slug, placeId) => json('DELETE', `/api/runs/${encodeURIComponent(slug)}/leads/${encodeURIComponent(placeId)}`),
+  deleteRun: (slug) => json('DELETE', `/api/runs/${encodeURIComponent(slug)}`),
+  exportUrl: (slug, kind = 'md') => `/api/runs/${encodeURIComponent(slug)}/export.${kind}`,
   search: tracked('search', 'Searching…',
     (body, handlers) => stream('/api/search', body, handlers)),
   check: tracked('check', 'Checking sites…',
@@ -235,6 +240,7 @@ function renderNav() {
   }
 
   nav.appendChild(h('div', { class: 'nav__group', text: 'Records' }));
+  nav.appendChild(navLink('#/add', 'Add a lead'));
   nav.appendChild(navLink('#/history', 'Call history', { count: state.historyCount ?? null }));
   nav.appendChild(navLink('#/runs', 'Searches', { count: state.runs.length || null }));
   nav.appendChild(navLink('#/settings', 'Settings', {}));

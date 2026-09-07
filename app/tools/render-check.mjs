@@ -196,6 +196,13 @@ const api = {
   history: track('history', () => json('GET', '/api/history')),
   email: track('email', (s) => json('GET', `/api/email/${encodeURIComponent(s)}`)),
   outcome: track('outcome', async () => { throw new Error('harness refuses to write'); }),
+  // Write paths are never driven here — they mutate real data. exportUrl is
+  // pure string-building, so it is the real thing.
+  addLead: track('addLead', async () => { throw new Error('harness refuses to write'); }),
+  updateLead: track('updateLead', async () => { throw new Error('harness refuses to write'); }),
+  removeLead: track('removeLead', async () => { throw new Error('harness refuses to write'); }),
+  deleteRun: track('deleteRun', async () => { throw new Error('harness refuses to write'); }),
+  exportUrl: (slug, kind = 'md') => `/api/runs/${encodeURIComponent(slug)}/export.${kind}`,
   // Streaming endpoints are not driven here — they mutate real data.
   search: track('search', async () => ({})),
   check: track('check', async () => ({})),
@@ -209,10 +216,16 @@ const state = await api.state();
 const slug = state.activeRun?.slug;
 if (!slug) { console.error('no run to render against'); process.exit(1); }
 
+// Probe the site-check view with a business that actually exists in the
+// active run — a checked one if there is one, so the signal detail renders.
+const runDetail = await api.run(slug);
+const probeLead = (runDetail.leads || []).find((l) => l.check) || (runDetail.leads || [])[0] || {};
+
 const VIEWS = [
   ['search', {}], ['checking', { slug }], ['calllist', { slug }],
-  ['sitecheck', { slug, placeId: 'ChIJS6rhzvDHw4kRosAmkvUWSCU' }],
+  ['sitecheck', { slug, placeId: probeLead.place_id || 'missing' }],
   ['callmode', { slug }], ['history', {}], ['runs', {}], ['email', { slug }],
+  ['addlead', {}],
   ['settings', {}],
 ];
 

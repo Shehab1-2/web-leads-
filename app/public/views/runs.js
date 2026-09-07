@@ -396,7 +396,41 @@ function runDetail(row, rows, ctx, select) {
 
   right.appendChild(outcomesCard(row));
   right.appendChild(costCard(row));
+  right.appendChild(runActions(row, ctx));
   return wrap;
+}
+
+/**
+ * Export the finished call list, or delete the run. Deleting keeps
+ * seen_leads and the outcomes log — the businesses were still seen, the
+ * calls were still made — so it asks once, plainly, and says exactly that.
+ */
+function runActions(row, ctx) {
+  const slug = row.slug;
+  const del = h('button', { class: 'btn btn--quiet', type: 'button' },
+    icon('x', { size: 13, width: 2.2 }), 'Delete this run');
+  del.addEventListener('click', async () => {
+    const label = sentence(row.meta.niche) || slug;
+    if (!window.confirm(`Delete "${label}"? Its call list and site checks go away. Call history and logged outcomes are kept.`)) return;
+    del.disabled = true;
+    try {
+      await ctx.api.deleteRun(slug);
+      ctx.toast('Run deleted — history kept');
+      await ctx.refresh();
+      ctx.navigate('#/runs');
+    } catch (err) {
+      del.disabled = false;
+      ctx.toast(String(err.message || err), 'err');
+    }
+  });
+  return h('div', { class: 'panel', style: { marginTop: '18px' } },
+    h('div', { class: 'eyebrow', text: 'This run' }),
+    h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '14px' } },
+      h('a', { class: 'btn btn--outline btn--sm', href: ctx.api.exportUrl(slug, 'md'), download: true },
+        icon('download', { size: 13 }), 'Call list (.md)'),
+      h('a', { class: 'btn btn--outline btn--sm', href: ctx.api.exportUrl(slug, 'csv'), download: true },
+        icon('download', { size: 13 }), 'Rows (.csv)')),
+    h('div', { style: { marginTop: '12px' } }, del));
 }
 
 /** One proportional bar. Colour comes from the tier ramp in design.css. */
