@@ -21,6 +21,7 @@ import { rankLeads, countByTier, effectiveTier, isLead, TIER_LABEL, STAGE1_TIERS
 import * as apify from './lib/apify.mjs';
 import { checkAll } from './lib/sitecheck.mjs';
 import * as mail from './lib/email.mjs';
+import { toCsv } from './lib/csv.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(HERE, 'public');
@@ -135,6 +136,7 @@ function config() {
     // A path, not a secret — the Settings page shows where the data lives.
     dataDir: store.DATA_DIR,
     dataDirIsRepo: store.DATA_DIR === store.REPO_DATA_DIR,
+    backend: store.BACKEND,
   };
 }
 
@@ -241,7 +243,9 @@ async function api(req, res, pathname) {
     const date = meta.date || new Date().toISOString().slice(0, 10);
     const base = `${store.slugify(meta.niche || slug, meta.location || '')}-${date}`;
     if (m[2] === 'csv') {
-      const csv = await fs.readFile(store.runCsvPath(slug), 'utf8');
+      // Built from the rows, not read off disk — the Postgres backend has no
+      // file to read, and this way both backends export byte-identical CSV.
+      const csv = toCsv(store.LEAD_COLUMNS, rankLeads(leads));
       res.writeHead(200, {
         'content-type': 'text/csv; charset=utf-8',
         'content-disposition': `attachment; filename="${base}.csv"`,

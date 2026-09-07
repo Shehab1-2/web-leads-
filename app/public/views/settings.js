@@ -79,10 +79,15 @@ export async function render(root, ctx) {
         : 'Not set — fine while the app only listens on this machine.',
     state: c.passwordSet ? 'enabled' : c.onPlatform ? 'missing' : 'off (local only)',
   }));
+  const onPg = c.backend === 'postgres';
   grid1.appendChild(item({
-    name: 'Data directory', on: true,
-    detail: `${c.dataDir || 'data/'}${c.dataDirIsRepo ? ' (inside the repo)' : ' (mounted volume)'} — seen_leads.csv and the outcomes log are append-only.`,
-    state: c.dataDirIsRepo && c.onPlatform ? 'ephemeral — mount a volume' : 'persistent',
+    name: 'Storage', on: onPg || !c.onPlatform,
+    detail: onPg
+      ? 'Postgres. Runs, leads, site checks, call history and the outcomes log all live in the database, so a redeploy cannot lose them.'
+      : c.onPlatform
+        ? `CSV files at ${c.dataDir} inside the container — WIPED on every redeploy. Attach a database or a volume.`
+        : `CSV files under ${c.dataDir}. Call history and the outcomes log are append-only.`,
+    state: onPg ? 'postgres' : c.onPlatform ? 'ephemeral — not safe for real calls' : 'csv (local)',
   }));
   wrap.appendChild(grid1);
 
