@@ -459,9 +459,10 @@ async function api(req, res, pathname) {
       let skipped = 0;
       if (!body.includeSeen) {
         const seen = await store.readSeen();
-        const before = kept.length;
-        kept = apify.filterSeen(kept, seen);
-        skipped = before - kept.length;
+        // filterSeen returns { kept, skipped }. Assigning that object straight
+        // to `kept` left kept.length undefined, so every filtered search took
+        // the "nothing new" branch and discarded results already paid for.
+        ({ kept, skipped } = apify.filterSeen(kept, seen));
         if (skipped) s.log(`${skipped} already surfaced in an earlier run, filtered out`);
       }
       if (!kept.length) {
@@ -474,7 +475,7 @@ async function api(req, res, pathname) {
       const ranked = rankLeads(kept);
       await store.writeRun(slug, { niche, location, date, max, cost: max * apify.USD_PER_PLACE }, ranked);
       await store.appendSeen(ranked, niche, location, date);
-      s.log(`wrote data/leads_${slug}.csv`);
+      s.log(`saved ${ranked.length} lead(s) to ${store.BACKEND === 'postgres' ? 'the database' : `data/leads_${slug}.csv`}`);
       s.done({ slug, leads: ranked.length, skipped, counts: countByTier(ranked) });
     } catch (err) {
       s.error(err.message);

@@ -11,7 +11,9 @@
 import { STAGE1_TIERS } from './rank.mjs';
 
 export const ACTOR = 'compass~crawler-google-places';
-export const API_ROOT = 'https://api.apify.com/v2';
+// Overridable so the stage-1 flow can be exercised end to end against a fake
+// Apify — otherwise the only way to test this path is to spend real credit.
+export const API_ROOT = (process.env.APIFY_API_ROOT || '').trim() || 'https://api.apify.com/v2';
 
 // Approximate actor pricing, used only for the pre-run cost estimate.
 export const USD_PER_PLACE = 0.0015;
