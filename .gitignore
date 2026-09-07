@@ -3,3 +3,4 @@ node_modules/
 .env.local
 *.tmp-*
 app/config.local.json
+.webui_secret_key
