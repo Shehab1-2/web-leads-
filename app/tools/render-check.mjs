@@ -225,7 +225,7 @@ const VIEWS = [
   ['search', {}], ['checking', { slug }], ['calllist', { slug }],
   ['sitecheck', { slug, placeId: probeLead.place_id || 'missing' }],
   ['callmode', { slug }], ['history', {}], ['runs', {}], ['email', { slug }],
-  ['addlead', {}],
+  ['addlead', {}], ['overview', {}],
   ['settings', {}],
 ];
 

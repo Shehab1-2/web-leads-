@@ -104,7 +104,9 @@ export const api = {
 // ---------------------------------------------------------------- routes
 
 const ROUTES = [
+  { re: /^\/$/, view: 'overview', args: () => ({}) },
   { re: /^\/search$/, view: 'search', args: () => ({}) },
+  { re: /^\/add$/, view: 'addlead', args: () => ({}) },
   { re: /^\/checking\/(.+)$/, view: 'checking', args: (m) => ({ slug: dec(m[1]) }) },
   { re: /^\/leads\/([^/]+)\/(.+)$/, view: 'sitecheck', args: (m) => ({ slug: dec(m[1]), placeId: dec(m[2]) }) },
   { re: /^\/leads\/(.+)$/, view: 'calllist', args: (m) => ({ slug: dec(m[1]) }) },
@@ -198,65 +200,70 @@ function stageStrip(currentKey) {
 
 // ------------------------------------------------------------------- nav
 
-function navLink(hash, label, { count = null, n = null, sub = false, done = false } = {}) {
-  const active = location.hash === hash
-    || (hash !== '#/search' && hash && location.hash.startsWith(hash));
+function topLink(hash, label, { count = null } = {}) {
+  // "/" must match exactly; everything else matches its whole subtree so a
+  // detail screen still highlights the section it belongs to.
+  const here = location.hash || '#/';
+  const active = hash === '#/' ? (here === '#/' || here === '') : here.startsWith(hash);
   return h('a', {
-    class: `nav__link${sub ? ' nav__link--sub' : ''}`,
+    class: 'top__link',
     href: hash,
     ...(active ? { 'aria-current': 'page' } : {}),
   },
-    n !== null ? h('span', { class: 'nav__n', text: n }) : h('span', { class: 'nav__dot' }),
     h('span', { text: label }),
-    done ? icon('check', { size: 11, stroke: 'var(--ink-4)', width: 2.4 }) : null,
-    count !== null && count !== undefined
-      ? h('span', { class: 'nav__count tnum', text: String(count) }) : null);
+    count ? h('span', { class: 'top__count tnum', text: String(count) }) : null);
 }
 
 function renderNav() {
   const nav = document.getElementById('nav');
   if (!nav) return;
   clear(nav);
-  nav.appendChild(h('div', { class: 'nav__mark', text: 'web-leads' }));
 
+  const inner = h('div', { class: 'top__inner' });
+  inner.appendChild(h('a', { class: 'top__mark', href: '#/', text: 'web-leads' }));
+
+  // Grouped by what you are doing, not by what the data is called. The four
+  // pipeline stages are NOT here: they belong to a run, and repeating them
+  // globally is what made two competing navigations.
+  const r = state.activeRun;
+  const links = h('div', { class: 'top__links' },
+    topLink('#/', 'Overview'),
+    r ? topLink(`#/leads/${encodeURIComponent(r.slug)}`, 'Call list', { count: r.toCall || null }) : null,
+    topLink('#/search', 'New search'),
+    topLink('#/runs', 'Searches', { count: state.runs.length || null }),
+    topLink('#/history', 'History', { count: state.historyCount || null }),
+    topLink('#/settings', 'Settings'));
+  inner.appendChild(links);
+
+  const right = h('div', { class: 'top__right' });
   // A running job stays visible from every screen, not just the one that
   // started it.
   for (const label of jobs.values()) {
-    nav.appendChild(h('div', { class: 'nav__job' },
+    right.appendChild(h('div', { class: 'top__job' },
       icon('spinner', { size: 12, cls: 'spin', width: 2.2 }),
       h('span', { text: label })));
   }
-
-  nav.appendChild(h('div', { class: 'nav__group', text: 'Pipeline' }));
-  const r = state.activeRun;
-  const enc = r ? encodeURIComponent(r.slug) : null;
-  for (const s of pipeline()) {
-    if (!s.enabled) continue;
-    nav.appendChild(navLink(s.hash, s.label, { n: s.n, count: s.count, done: s.done }));
-    // Call mode is how stage 3 is worked, not a stage of its own.
-    if (s.key === 'call' && enc) {
-      nav.appendChild(navLink(`#/call/${enc}`, 'Call mode', { sub: true }));
-    }
+  if (r) {
+    right.appendChild(h('a', {
+      class: 'top__run',
+      href: `#/runs`,
+      title: `${r.niche || r.slug} — ${r.location || ''}`,
+    },
+      icon('pin', { size: 12, stroke: 'var(--ink-4)' }),
+      h('span', { class: 'top__run-name', text: r.niche || r.slug })));
   }
-
-  nav.appendChild(h('div', { class: 'nav__group', text: 'Records' }));
-  nav.appendChild(navLink('#/add', 'Add a lead'));
-  nav.appendChild(navLink('#/history', 'Call history', { count: state.historyCount ?? null }));
-  nav.appendChild(navLink('#/runs', 'Searches', { count: state.runs.length || null }));
-  nav.appendChild(navLink('#/settings', 'Settings', {}));
+  inner.appendChild(right);
+  nav.appendChild(inner);
 }
 
 // ---------------------------------------------------------------- render
 
 async function render() {
   const path = location.hash.replace(/^#/, '') || '/';
+  // An empty hash and "#/" are the same screen; normalise so the nav can
+  // match on one form.
+  if (path === '') return navigate('#/');
   const root = document.getElementById('view');
-
-  if (path === '/' || path === '') {
-    const target = state.activeRun ? `#/leads/${encodeURIComponent(state.activeRun.slug)}` : '#/search';
-    location.replace(target);
-    return;
-  }
 
   const route = ROUTES.map((r) => ({ r, m: path.match(r.re) })).find((x) => x.m);
   if (!route) { clear(root); root.appendChild(notFound(path)); return; }
