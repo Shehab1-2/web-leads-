@@ -48,7 +48,10 @@ export async function render(root, ctx) {
   const config = ctx.state && ctx.state.config ? ctx.state.config : {};
   const tokenMissing = config.apifyToken === false;
 
-  const form = { max: 20, skipSeen: true, confirmed: false, contacts: false };
+  // Contacts default ON: the whole point of a call list is reaching people, and
+  // $2/1000 on top of $4/1000 is not a decision worth making every single run.
+  // Switch it off for a cheap exploratory pull.
+  const form = { max: 20, skipSeen: true, confirmed: false, contacts: true };
 
   // ------------------------------------------------------------ heading
 
@@ -125,7 +128,7 @@ export async function render(root, ctx) {
     form.max = Math.min(MAX_RESULTS, Math.max(MIN_RESULTS, Math.round(next / STEP) * STEP));
     stepValue.textContent = String(form.max);
     const rate = form.contacts ? USD_PER_PLACE_WITH_CONTACTS : USD_PER_PLACE;
-    costLine.textContent = `≈ ${(form.max * rate).toFixed(2)} for this run`;
+    costLine.textContent = `≈ $${(form.max * rate).toFixed(2)} for this run`;
     stepDown.disabled = form.max <= MIN_RESULTS;
     stepUp.disabled = form.max >= MAX_RESULTS;
     stepDown.style.opacity = stepDown.disabled ? '0.35' : '1';
@@ -168,13 +171,14 @@ export async function render(root, ctx) {
           : `Checked against data/seen_leads.csv — ${plural(seenCount, 'business', 'businesses')} on file.`,
       })));
 
-  // Contacts add-on. Charged per place on top of the base rate, so it is off
-  // by default and the cost line moves the moment it is switched on.
+  // Contacts add-on. On by default — reaching people is the point of the list.
+  // It is charged per place on top of the base rate, so the cost line moves the
+  // moment it is switched off.
   const contactsToggle = h('button', {
     class: 'toggle',
     type: 'button',
     role: 'switch',
-    'aria-pressed': 'false',
+    'aria-pressed': 'true',
     'aria-label': 'Also find emails and social profiles',
   });
   contactsToggle.addEventListener('click', () => {
@@ -217,7 +221,7 @@ export async function render(root, ctx) {
       formEl.dispatchEvent(new Event('submit', { cancelable: true }));
     });
     no.addEventListener('click', () => { hideCostConfirm(); nicheInput.focus(); });
-    costConfirm.appendChild(h('div', { class: 'note__title', text: `That is a big run — about ${est}` }));
+    costConfirm.appendChild(h('div', { class: 'note__title', text: `That is a big run — about $${est}` }));
     costConfirm.appendChild(h('div', { class: 'note__body' },
       `${max} places is over the ${CONFIRM_OVER}-place guard. It comes out of your Apify credit, `
       + 'and nothing has been spent yet.'));
