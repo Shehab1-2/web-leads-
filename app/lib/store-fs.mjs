@@ -24,13 +24,18 @@ export const REPO_DATA_DIR = path.join(ROOT, 'data');
 export const DATA_DIR = path.resolve((process.env.DATA_DIR || '').trim() || REPO_DATA_DIR);
 export const RUNS_DIR = path.join(DATA_DIR, 'runs');
 export const CHECKS_DIR = path.join(DATA_DIR, 'checks');
+export const DETAILS_DIR = path.join(DATA_DIR, 'details');
 export const SEEN_PATH = path.join(DATA_DIR, 'seen_leads.csv');
 export const OUTCOMES_PATH = path.join(DATA_DIR, 'call_outcomes.csv');
 
+// Widened to carry what Google Maps actually returns. Reading is by header, so
+// a run written before this still parses - the new cells just come back empty.
 export const LEAD_COLUMNS = [
-  'tier', 'name', 'phone', 'address', 'city', 'category',
-  'website', 'rating', 'reviews', 'maps_url', 'place_id',
-  'checked_tier', 'reason',
+  'tier', 'name', 'phone', 'address', 'city', 'state', 'postal_code',
+  'category', 'website', 'email', 'socials',
+  'rating', 'reviews', 'claim_this_business', 'hours',
+  'image_url', 'description', 'lat', 'lng',
+  'maps_url', 'place_id', 'checked_tier', 'reason',
 ];
 
 export const SEEN_COLUMNS = [
@@ -86,6 +91,7 @@ export function runCsvPath(slug) { return path.join(DATA_DIR, `leads_${slug}.csv
 export function runJsonPath(slug) { return path.join(DATA_DIR, `leads_${slug}.json`); }
 export function runMetaPath(slug) { return path.join(RUNS_DIR, `${slug}.json`); }
 export function checksPath(slug) { return path.join(CHECKS_DIR, `${slug}.json`); }
+export function detailsPath(slug) { return path.join(DETAILS_DIR, `${slug}.json`); }
 
 /**
  * Run metadata. Runs made before this app existed have no metadata file, so
@@ -130,11 +136,13 @@ export async function readRun(slug) {
   const { rows } = await readCsvObjects(runCsvPath(slug));
   const meta = await readRunMeta(slug);
   const checks = await readChecks(slug);
+  const details = await readDetails(slug);
   const leads = rows.map((r) => ({
     ...r,
     rating: r.rating === '' ? null : Number(r.rating),
     reviews: r.reviews === '' ? null : Number(r.reviews),
     check: checks[r.place_id] || null,
+    details: details[r.place_id] || null,
   }));
   return { meta, leads };
 }
@@ -218,9 +226,20 @@ export async function removeLead(slug, placeId) {
  * were still made.
  */
 export async function deleteRun(slug) {
-  for (const p of [runCsvPath(slug), runJsonPath(slug), runMetaPath(slug), checksPath(slug)]) {
+  for (const p of [runCsvPath(slug), runJsonPath(slug), runMetaPath(slug), checksPath(slug), detailsPath(slug)]) {
     try { await fs.rm(p); } catch { /* absent is fine */ }
   }
+}
+
+/** The full Apify record per place_id — everything the CSV has no room for. */
+export async function readDetails(slug) {
+  if (!(await exists(detailsPath(slug)))) return {};
+  try { return JSON.parse(await fs.readFile(detailsPath(slug), 'utf8')); } catch { return {}; }
+}
+
+export async function writeDetails(slug, detailsByPlaceId) {
+  const existing = await readDetails(slug);
+  await writeAtomic(detailsPath(slug), `${JSON.stringify({ ...existing, ...detailsByPlaceId }, null, 2)}\n`);
 }
 
 export async function readChecks(slug) {

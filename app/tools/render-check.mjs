@@ -194,6 +194,7 @@ const api = {
   runs: track('runs', () => json('GET', '/api/runs')),
   run: track('run', (s) => json('GET', `/api/runs/${encodeURIComponent(s)}`)),
   history: track('history', () => json('GET', '/api/history')),
+  leads: track('leads', () => json('GET', '/api/leads')),
   email: track('email', (s) => json('GET', `/api/email/${encodeURIComponent(s)}`)),
   outcome: track('outcome', async () => { throw new Error('harness refuses to write'); }),
   // Write paths are never driven here — they mutate real data. exportUrl is
@@ -225,7 +226,7 @@ const VIEWS = [
   ['search', {}], ['checking', { slug }], ['calllist', { slug }],
   ['sitecheck', { slug, placeId: probeLead.place_id || 'missing' }],
   ['callmode', { slug }], ['history', {}], ['runs', {}], ['email', { slug }],
-  ['addlead', {}], ['overview', {}],
+  ['addlead', {}], ['overview', {}], ['data', {}],
   ['settings', {}],
 ];
 
@@ -294,6 +295,41 @@ if (missingClasses.size) {
   console.log('\nCLASSES NOT IN design.css:');
   for (const [v, set] of missingClasses) console.log(`  ${v}: ${[...set].join(', ')}`);
 }
+// ------------------------------------------------------------------- panel
+// The detail panel is opened by a click, so no view render reaches it. Drive
+// it directly: open, assert it drew, assert close tears it down.
+
+try {
+  const { openPanel, closePanel } = await import(APP + 'panel.js');
+  const probe = runDetail.leads.find((l) => l.check) || runDetail.leads[0];
+  const before = document.body.childNodes.length;
+  openPanel({ ...probe, run: slug, fullPage: '#/x' }, { api, toast: () => {} });
+  const panelEl = document.querySelector('.pnl');
+  if (!panelEl) {
+    failures.push(['panel', 'openPanel drew nothing']);
+  } else {
+    const text = panelEl.textContent.replace(/\s+/g, ' ').trim();
+    if (!text.includes(probe.name)) failures.push(['panel', 'panel did not show the business name']);
+    for (const el of panelEl.querySelectorAll('div').concat(panelEl.querySelectorAll('a'))) {
+      for (const c of el._classes()) {
+        if (!cssClasses.has(c) && !c.startsWith('pnl')) {
+          failures.push(['panel', `class .${c} is not in design.css`]);
+        }
+      }
+    }
+    console.log(`ok   panel      ${panelEl.querySelectorAll('a').length} action(s)  "${text.slice(0, 58)}"`);
+  }
+  closePanel();
+  // closePanel detaches on a timer; give it room, then confirm nothing leaked.
+  await new Promise((r) => setTimeout(r, 260));
+  if (document.querySelector('.pnl')) failures.push(['panel', 'still in the DOM after closePanel']);
+  if (document.body.childNodes.length !== before) {
+    failures.push(['panel', `left ${document.body.childNodes.length - before} node(s) behind`]);
+  }
+} catch (e) {
+  failures.push(['panel', (e && e.message) || String(e)]);
+}
+
 // ------------------------------------------------------------------- shell
 // The nav is not a view, so nothing above touches it. Boot the real app.js
 // against the real server and assert the chrome actually rendered — a nav that

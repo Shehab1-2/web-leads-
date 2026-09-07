@@ -378,6 +378,31 @@ async function api(req, res, pathname) {
     return ok(res, { rows });
   }
 
+  // Every business ever scraped, across every run, with its run and outcome
+  // joined on. The table view works from this; it is deliberately one request
+  // rather than one per run.
+  if (method === 'GET' && pathname === '/api/leads') {
+    const statuses = await store.currentStatuses();
+    const runs = await store.listRuns();
+    const rows = [];
+    for (const r of runs) {
+      const { meta, leads } = await store.readRun(r.slug);
+      for (const l of leads) {
+        rows.push({
+          ...l,
+          run: r.slug,
+          niche: meta.niche || '',
+          location: meta.location || '',
+          date: meta.date || '',
+          effectiveTier: effectiveTier(l),
+          isLead: isLead(effectiveTier(l)),
+          outcome: statuses[l.place_id] || null,
+        });
+      }
+    }
+    return ok(res, { rows, runs: runs.map((r) => r.slug), columns: store.LEAD_COLUMNS });
+  }
+
   if (method === 'GET' && pathname === '/api/history') {
     const seen = await store.readSeen();
     const statuses = await store.currentStatuses();
@@ -449,7 +474,7 @@ async function api(req, res, pathname) {
     const release = guard(`search:${niche}|${location}`);
     const s = openStream(res);
     try {
-      const { leads } = await apify.search({
+      const { leads, details } = await apify.search({
         niche, location, max, token, onProgress: s.log,
         // The UI asks before a big run; without this the guard in apify.mjs is
         // unreachable from a browser, which has no way to "re-run with yes".
@@ -474,6 +499,7 @@ async function api(req, res, pathname) {
       const date = new Date().toISOString().slice(0, 10);
       const ranked = rankLeads(kept);
       await store.writeRun(slug, { niche, location, date, max, cost: max * apify.USD_PER_PLACE }, ranked);
+      if (details && Object.keys(details).length) await store.writeDetails(slug, details);
       await store.appendSeen(ranked, niche, location, date);
       s.log(`saved ${ranked.length} lead(s) to ${store.BACKEND === 'postgres' ? 'the database' : `data/leads_${slug}.csv`}`);
       s.done({ slug, leads: ranked.length, skipped, counts: countByTier(ranked) });

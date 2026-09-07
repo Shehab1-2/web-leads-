@@ -164,6 +164,57 @@ function numOrNull(value) {
   return Number.isFinite(n) ? n : null;
 }
 
+/** "Mon 10 AM to 6 PM · Tue …" — the array is kept whole in details. */
+function compactHours(hours) {
+  if (!Array.isArray(hours) || !hours.length) return '';
+  return hours
+    .map((h) => `${String(h?.day || '').slice(0, 3)} ${h?.hours || ''}`.trim())
+    .filter(Boolean)
+    .join(' · ');
+}
+
+/**
+ * Social links, wherever the contacts add-on put them. The actor names these
+ * per-network and pluralised (facebooks, instagrams, …); take the first of
+ * each so one cell reads as a list rather than a blob.
+ */
+function socialsOf(src) {
+  const out = [];
+  for (const key of ['facebooks', 'instagrams', 'linkedIns', 'twitters', 'tiktoks', 'youtubes']) {
+    const v = src[key];
+    if (Array.isArray(v) && v.length) out.push(String(v[0]));
+    else if (typeof v === 'string' && v.trim()) out.push(v.trim());
+  }
+  return out.join(' ');
+}
+
+/** First usable email from the contacts add-on, if it ran. */
+function emailOf(src) {
+  const list = Array.isArray(src.emails) ? src.emails : [];
+  const first = list.find((e) => typeof e === 'string' && e.includes('@'));
+  return first ? String(first).trim() : '';
+}
+
+// Fields not worth carrying: always-null verticals, and arrays big enough to
+// bloat every row. Everything else is kept so the detail panel can show it.
+const DETAIL_DROP = new Set([
+  'hotelStars', 'hotelDescription', 'hotelAds', 'checkInDate', 'checkOutDate',
+  'gasPrices', 'googleFoodUrl', 'menu', 'price',
+  'reviews', 'images', 'imageUrls', 'popularTimesHistogram', 'peopleAlsoSearch',
+]);
+
+/** The whole Apify record minus the noise, for the detail panel. */
+export function details(item) {
+  const out = {};
+  for (const [k, v] of Object.entries(item || {})) {
+    if (DETAIL_DROP.has(k)) continue;
+    if (v === null || v === undefined || v === '') continue;
+    if (Array.isArray(v) && !v.length) continue;
+    out[k] = v;
+  }
+  return out;
+}
+
 /** One Apify place -> the lead shape stored in data/leads_<slug>.csv. */
 export function slim(item) {
   const src = item || {};
@@ -174,11 +225,25 @@ export function slim(item) {
     phone: src.phone || src.phoneUnformatted || '',
     address: src.address || '',
     city: src.city || '',
+    state: src.state || '',
+    postal_code: src.postalCode || '',
     category: src.categoryName || '',
     website,
+    email: emailOf(src),
+    socials: socialsOf(src),
     tier: classify(website),
     rating: numOrNull(src.totalScore),
     reviews: numOrNull(src.reviewsCount),
+    // Google's own "claim this business" prompt. Stored as the API reports it
+    // and NOT used for ranking — every row seen so far reads false, so the
+    // semantics are unconfirmed against a genuinely unclaimed listing.
+    claim_this_business: src.claimThisBusiness === true ? 'true'
+      : src.claimThisBusiness === false ? 'false' : '',
+    hours: compactHours(src.openingHours),
+    image_url: src.imageUrl || '',
+    description: src.description || '',
+    lat: src.location && src.location.lat !== undefined ? String(src.location.lat) : '',
+    lng: src.location && src.location.lng !== undefined ? String(src.location.lng) : '',
     maps_url: src.url || '',
     checked_tier: '',   // filled in by stage 2
     reason: '',
@@ -470,6 +535,7 @@ export async function search({
   }
 
   const rows = [];
+  const detailsById = {};
   const dupes = new Set();
   for (const item of raw) {
     const r = slim(item);
@@ -480,6 +546,9 @@ export async function search({
     if (dupes.has(key)) continue;
     dupes.add(key);
     rows.push(r);
+    // The full record, kept beside the row rather than in it: the CSV stays
+    // workable while the detail panel still has everything Apify sent.
+    if (r.place_id) detailsById[r.place_id] = details(item);
   }
 
   sortLeads(rows);
@@ -497,5 +566,5 @@ export async function search({
     ? `${needs} business(es) have a real domain and need the site check (stage 2).`
     : 'No sites need the site check - every lead is already classified from the Maps data.');
 
-  return { leads: rows, runId, datasetId, raw: raw.length, status, counts, estimatedUsd: est };
+  return { leads: rows, details: detailsById, runId, datasetId, raw: raw.length, status, counts, estimatedUsd: est };
 }

@@ -29,6 +29,8 @@ export const {
   addLead, updateLead, removeLead,
   // checks
   readChecks, writeChecks,
+  // the full Apify record per lead
+  readDetails, writeDetails,
   // history
   readSeen, appendSeen, updateSeenStatus,
   readOutcomes, appendOutcome, currentStatuses,

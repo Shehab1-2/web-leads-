@@ -13,6 +13,8 @@ import {
   STATUS_LABEL, fmtDate,
 } from '../dom.js';
 
+import { openPanel, closePanel } from '../panel.js';
+
 export const meta = { title: 'Call list' };
 
 // --------------------------------------------------------------- tiers
@@ -158,6 +160,7 @@ export async function render(root, ctx) {
 
 export function destroy() {
   closeMenu();
+  closePanel();
 }
 
 function loadingPane() {
@@ -445,13 +448,20 @@ function screen(data, ctx) {
     const tier = effectiveTier(lead);
     const status = statuses[lead.place_id] || null;
     const target = `#/leads/${encodeURIComponent(slug)}/${encodeURIComponent(lead.place_id)}`;
-    const open = () => { closeMenu(); ctx.navigate(target); };
+    // Opens beside the list rather than replacing it, so you keep your place.
+    // The full-page route stays valid for deep links and for anyone who wants
+    // it in its own tab (ctrl/cmd-click, or the "Open full page" link inside).
+    const open = () => {
+      closeMenu();
+      openPanel({ ...lead, outcome: statuses[lead.place_id] || null, run: slug, fullPage: target },
+        { ...ctx, onChange: () => paintRows() });
+    };
 
     const row = h('div', {
       class: `lead${rank === 1 ? ' lead--top' : ''}${status ? ' lead--handled' : ''}`,
       role: 'link',
       tabindex: '0',
-      'aria-label': `${lead.name || 'Unnamed business'} — open site check`,
+      'aria-label': `${lead.name || 'Unnamed business'} — open details`,
       style: { cursor: 'pointer', ...(isLast ? { borderBottom: '1px solid var(--rule)' } : {}) },
       onClick: open,
       onKeydown: (e) => {

@@ -102,8 +102,29 @@ CREATE TABLE IF NOT EXISTS call_outcomes (
   note     TEXT NOT NULL DEFAULT ''
 );
 
+CREATE TABLE IF NOT EXISTS details (
+  slug     TEXT NOT NULL,
+  place_id TEXT NOT NULL,
+  detail   JSONB NOT NULL,
+  PRIMARY KEY (slug, place_id)
+);
+
 CREATE INDEX IF NOT EXISTS call_outcomes_place_idx ON call_outcomes (place_id, at);
 CREATE INDEX IF NOT EXISTS leads_slug_idx ON leads (slug);
+
+-- Widening an existing leads table. CREATE TABLE IF NOT EXISTS above is a no-op
+-- once the table exists, so every column added after the first deploy has to be
+-- named here too.
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS state               TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS postal_code         TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS email               TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS socials             TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS claim_this_business TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS hours               TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS image_url           TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS description         TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS lat                 TEXT NOT NULL DEFAULT '';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS lng                 TEXT NOT NULL DEFAULT '';
 `;
 
 let ready = null;
@@ -149,6 +170,7 @@ export async function readRun(slug) {
   const meta = await readRunMeta(slug);
   const { rows } = await q(`SELECT ${LEAD_COLUMNS.join(', ')} FROM leads WHERE slug = $1`, [slug]);
   const checks = await readChecks(slug);
+  const detail = await readDetails(slug);
   const leads = rows.map((r) => {
     const l = leadFromRow(r);
     return {
@@ -156,6 +178,7 @@ export async function readRun(slug) {
       rating: l.rating === '' ? null : Number(l.rating),
       reviews: l.reviews === '' ? null : Number(l.reviews),
       check: checks[l.place_id] || null,
+      details: detail[l.place_id] || null,
     };
   });
   return { meta, leads };
@@ -213,6 +236,7 @@ export async function deleteRun(slug) {
   // leads cascade; checks are keyed by slug and cleared explicitly. seen_leads
   // and call_outcomes are history and deliberately survive.
   await q('DELETE FROM checks WHERE slug = $1', [slug]);
+  await q('DELETE FROM details WHERE slug = $1', [slug]);
   await q('DELETE FROM runs WHERE slug = $1', [slug]);
 }
 
@@ -264,6 +288,25 @@ export async function removeLead(slug, placeId) {
 }
 
 // ------------------------------------------------------------------ checks
+
+export async function readDetails(slug) {
+  await init();
+  const { rows } = await q('SELECT place_id, detail FROM details WHERE slug = $1', [slug]);
+  const out = {};
+  for (const r of rows) out[r.place_id] = r.detail;
+  return out;
+}
+
+export async function writeDetails(slug, detailsByPlaceId) {
+  await init();
+  for (const [placeId, detail] of Object.entries(detailsByPlaceId)) {
+    await q(
+      `INSERT INTO details (slug, place_id, detail) VALUES ($1, $2, $3)
+       ON CONFLICT (slug, place_id) DO UPDATE SET detail = EXCLUDED.detail`,
+      [slug, placeId, JSON.stringify(detail)],
+    );
+  }
+}
 
 export async function readChecks(slug) {
   await init();
@@ -387,6 +430,8 @@ export async function seedDataDir() {
     await writeRun(r.slug, meta, leads);
     const checks = await fsStore.readChecks(r.slug);
     if (Object.keys(checks).length) await writeChecks(r.slug, checks);
+    const detail = await fsStore.readDetails(r.slug);
+    if (Object.keys(detail).length) await writeDetails(r.slug, detail);
   }
   for (const s of await fsStore.readSeen()) {
     await q(

@@ -85,6 +85,7 @@ export const api = {
   runs: () => json('GET', '/api/runs'),
   run: (slug) => json('GET', `/api/runs/${encodeURIComponent(slug)}`),
   history: () => json('GET', '/api/history'),
+  leads: () => json('GET', '/api/leads'),
   activity: (placeId) => json('GET', `/api/activity/${encodeURIComponent(placeId)}`),
   email: (slug) => json('GET', `/api/email/${encodeURIComponent(slug)}`),
   outcome: (body) => json('POST', '/api/outcome', body),
@@ -111,6 +112,7 @@ const ROUTES = [
   { re: /^\/leads\/([^/]+)\/(.+)$/, view: 'sitecheck', args: (m) => ({ slug: dec(m[1]), placeId: dec(m[2]) }) },
   { re: /^\/leads\/(.+)$/, view: 'calllist', args: (m) => ({ slug: dec(m[1]) }) },
   { re: /^\/call\/(.+)$/, view: 'callmode', args: (m) => ({ slug: dec(m[1]) }) },
+  { re: /^\/data$/, view: 'data', args: () => ({}) },
   { re: /^\/history$/, view: 'history', args: () => ({}) },
   { re: /^\/runs$/, view: 'runs', args: () => ({}) },
   { re: /^\/settings$/, view: 'settings', args: () => ({}) },
@@ -230,6 +232,7 @@ function renderNav() {
     topLink('#/', 'Overview'),
     r ? topLink(`#/leads/${encodeURIComponent(r.slug)}`, 'Call list', { count: r.toCall || null }) : null,
     topLink('#/search', 'New search'),
+    topLink('#/data', 'Data'),
     topLink('#/runs', 'Searches', { count: state.runs.length || null }),
     topLink('#/history', 'History', { count: state.historyCount || null }),
     topLink('#/settings', 'Settings'));
