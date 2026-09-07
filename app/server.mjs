@@ -479,6 +479,8 @@ async function api(req, res, pathname) {
         // The UI asks before a big run; without this the guard in apify.mjs is
         // unreachable from a browser, which has no way to "re-run with yes".
         yes: Boolean(body.confirm),
+        // Paid add-on, off unless the search screen asked for it.
+        contacts: Boolean(body.contacts),
       });
       let kept = leads;
       let skipped = 0;
@@ -498,7 +500,10 @@ async function api(req, res, pathname) {
       const slug = store.slugify(niche, location);
       const date = new Date().toISOString().slice(0, 10);
       const ranked = rankLeads(kept);
-      await store.writeRun(slug, { niche, location, date, max, cost: max * apify.USD_PER_PLACE }, ranked);
+      await store.writeRun(slug, {
+        niche, location, date, max,
+        cost: apify.estimateUsd(max, Boolean(body.contacts)),
+      }, ranked);
       if (details && Object.keys(details).length) await store.writeDetails(slug, details);
       await store.appendSeen(ranked, niche, location, date);
       s.log(`saved ${ranked.length} lead(s) to ${store.BACKEND === 'postgres' ? 'the database' : `data/leads_${slug}.csv`}`);

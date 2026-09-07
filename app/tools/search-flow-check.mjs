@@ -38,6 +38,8 @@ const PLACES = [
   temporarilyClosed: false,
 }));
 
+let lastPayload = null;
+
 const apify = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://fake');
   const json = (body) => {
@@ -46,13 +48,25 @@ const apify = http.createServer((req, res) => {
     res.end(t);
   };
   if (req.method === 'POST' && /\/acts\/.+\/runs$/.test(url.pathname)) {
-    req.resume();
-    return json({ data: { id: 'FAKERUN', defaultDatasetId: 'FAKEDATA', status: 'RUNNING' } });
+    // Keep the input the server sent, so the add-on flags can be asserted.
+    let raw = '';
+    req.on('data', (c) => { raw += c; });
+    req.on('end', () => {
+      try { lastPayload = JSON.parse(raw); } catch { lastPayload = null; }
+      json({ data: { id: 'FAKERUN', defaultDatasetId: 'FAKEDATA', status: 'RUNNING' } });
+    });
+    return undefined;
   }
   if (/\/actor-runs\/FAKERUN$/.test(url.pathname)) {
     return json({ data: { id: 'FAKERUN', status: 'SUCCEEDED', defaultDatasetId: 'FAKEDATA' } });
   }
   if (/\/datasets\/FAKEDATA\/items$/.test(url.pathname)) {
+    // Mirrors the real actor: contact fields appear only when asked for.
+    if (lastPayload && lastPayload.scrapeContacts) {
+      return json(PLACES.map((p, i) => (i === 0
+        ? { ...p, emails: ['owner@capellisalon.test'], facebooks: ['https://facebook.com/capelli'] }
+        : p)));
+    }
     return json(PLACES);
   }
   res.writeHead(404); res.end('{}');
@@ -165,6 +179,26 @@ try {
   const third = await runSearch({ niche: 'hair salons', location: 'Piscataway, NJ', max: 20, includeSeen: true });
   check('includeSeen re-writes the run', third.done && third.done.slug && third.done.leads === PLACES.length,
     `done payload was ${JSON.stringify(third.done)}`);
+
+  // --- 3b. the contacts add-on is opt-in and actually lands ---------------
+  check('contacts off by default', lastPayload && !lastPayload.scrapeContacts,
+    `payload had scrapeContacts=${lastPayload && lastPayload.scrapeContacts}`);
+
+  const enriched = await runSearch({
+    niche: 'hair salons', location: 'Piscataway, NJ', max: 20, includeSeen: true, contacts: true,
+  });
+  check('contacts:true reaches the actor', Boolean(lastPayload && lastPayload.scrapeContacts === true),
+    `payload had scrapeContacts=${lastPayload && lastPayload.scrapeContacts}`);
+  if (enriched.done && enriched.done.slug) {
+    const run = await (await fetch(`${BASE}/api/runs/${encodeURIComponent(enriched.done.slug)}`)).json();
+    const withEmail = run.leads.filter((l) => l.email);
+    check('email is stored on the lead', withEmail.length === 1 && withEmail[0].email === 'owner@capellisalon.test',
+      `got ${JSON.stringify(run.leads.map((l) => l.email))}`);
+    check('socials are stored', run.leads.some((l) => String(l.socials || '').includes('facebook.com/capelli')),
+      `got ${JSON.stringify(run.leads.map((l) => l.socials))}`);
+    check('full record kept per lead', run.leads.every((l) => l.details && l.details.placeId),
+      'a lead came back without its details blob');
+  }
 
   // --- 4. the cost guard is reachable and confirmable ---------------------
   let guarded = false;

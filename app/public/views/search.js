@@ -11,7 +11,10 @@ export const meta = { title: 'New search' };
 
 // Mirrors USD_PER_PLACE in app/lib/apify.mjs. The lib/ modules are node-side
 // and are not served to the browser, so the number is repeated, not imported.
-const USD_PER_PLACE = 0.0015;
+const USD_PER_PLACE = 0.005;
+// The contacts add-on is charged per place on top. Both measured from real
+// runs — see app/lib/apify.mjs.
+const USD_PER_PLACE_WITH_CONTACTS = 0.00625;
 
 // Mirrors the cost guard in app/lib/apify.mjs — above this many places the
 // run is confirmed before anything is spent.
@@ -45,7 +48,7 @@ export async function render(root, ctx) {
   const config = ctx.state && ctx.state.config ? ctx.state.config : {};
   const tokenMissing = config.apifyToken === false;
 
-  const form = { max: 20, skipSeen: true, confirmed: false };
+  const form = { max: 20, skipSeen: true, confirmed: false, contacts: false };
 
   // ------------------------------------------------------------ heading
 
@@ -121,7 +124,8 @@ export async function render(root, ctx) {
   function setMax(next) {
     form.max = Math.min(MAX_RESULTS, Math.max(MIN_RESULTS, Math.round(next / STEP) * STEP));
     stepValue.textContent = String(form.max);
-    costLine.textContent = `≈ $${(form.max * USD_PER_PLACE).toFixed(2)} for this run`;
+    const rate = form.contacts ? USD_PER_PLACE_WITH_CONTACTS : USD_PER_PLACE;
+    costLine.textContent = `≈ ${(form.max * rate).toFixed(2)} for this run`;
     stepDown.disabled = form.max <= MIN_RESULTS;
     stepUp.disabled = form.max >= MAX_RESULTS;
     stepDown.style.opacity = stepDown.disabled ? '0.35' : '1';
@@ -164,6 +168,32 @@ export async function render(root, ctx) {
           : `Checked against data/seen_leads.csv — ${plural(seenCount, 'business', 'businesses')} on file.`,
       })));
 
+  // Contacts add-on. Charged per place on top of the base rate, so it is off
+  // by default and the cost line moves the moment it is switched on.
+  const contactsToggle = h('button', {
+    class: 'toggle',
+    type: 'button',
+    role: 'switch',
+    'aria-pressed': 'false',
+    'aria-label': 'Also find emails and social profiles',
+  });
+  contactsToggle.addEventListener('click', () => {
+    form.contacts = !form.contacts;
+    contactsToggle.setAttribute('aria-pressed', String(form.contacts));
+    setMax(form.max);   // repaint the estimate at the new rate
+  });
+  const contactsRow = h('div', { style: { display: 'flex', alignItems: 'flex-start', gap: '14px', paddingTop: '4px' } },
+    contactsToggle,
+    h('div', {},
+      h('div', { style: { fontSize: '14.5px', fontWeight: '500' }, text: 'Also find emails and social profiles' }),
+      h('div', {
+        class: 'hint',
+        style: { marginTop: '4px' },
+        text: 'Apify opens each business’s own site and reads off contact details. '
+          + 'Costs about 25% more per place, and only businesses with a website can '
+          + 'be reached this way — expect an address for roughly one in five.',
+      })));
+
   // Submit row, or the token explanation in its place.
   const runLabel = h('span', { text: 'Run search' });
   const runIcon = h('span', { style: { display: 'flex' } },
@@ -176,7 +206,7 @@ export async function render(root, ctx) {
   const costConfirm = h('div', { class: 'note', style: { display: 'none' } });
 
   function showCostConfirm(max) {
-    const est = (max * USD_PER_PLACE).toFixed(2);
+    const est = (max * (form.contacts ? USD_PER_PLACE_WITH_CONTACTS : USD_PER_PLACE)).toFixed(2);
     clear(costConfirm);
     costConfirm.style.display = '';
     const yes = h('button', { class: 'btn btn--primary btn--sm', type: 'button' },
@@ -232,6 +262,7 @@ export async function render(root, ctx) {
       locErr),
     maxRow,
     toggleRow,
+    contactsRow,
     submitRow);
   columns.appendChild(formEl);
 
@@ -360,7 +391,12 @@ export async function render(root, ctx) {
 
     try {
       const done = await ctx.api.search(
-        { niche, location, max: form.max, includeSeen: !form.skipSeen, confirm: form.confirmed },
+        {
+          niche, location, max: form.max,
+          includeSeen: !form.skipSeen,
+          confirm: form.confirmed,
+          contacts: form.contacts,
+        },
         { log: onMessage, progress: onMessage },
       );
       if (s.dead) return;

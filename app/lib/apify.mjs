@@ -15,8 +15,17 @@ export const ACTOR = 'compass~crawler-google-places';
 // Apify — otherwise the only way to test this path is to spend real credit.
 export const API_ROOT = (process.env.APIFY_API_ROOT || '').trim() || 'https://api.apify.com/v2';
 
-// Approximate actor pricing, used only for the pre-run cost estimate.
-export const USD_PER_PLACE = 0.0015;
+// Measured from real runs, not estimated: three runs of 15, 16 and 20 places
+// each billed exactly $0.00501 per place, and a 5-place run with contact
+// enrichment billed $0.00624. Re-measure if Apify changes its pricing —
+// an estimate that reads low is worse than none.
+export const USD_PER_PLACE = 0.005;
+export const USD_PER_PLACE_WITH_CONTACTS = 0.00625;
+
+/** What a run costs to show before it starts. */
+export function estimateUsd(maxPlaces, contacts = false) {
+  return maxPlaces * (contacts ? USD_PER_PLACE_WITH_CONTACTS : USD_PER_PLACE);
+}
 
 // A "website" on one of these hosts is not a real website. For a web-design
 // pitch these are the best leads in the list: the business has an audience but
@@ -180,7 +189,7 @@ function compactHours(hours) {
  */
 function socialsOf(src) {
   const out = [];
-  for (const key of ['facebooks', 'instagrams', 'linkedIns', 'twitters', 'tiktoks', 'youtubes']) {
+  for (const key of ['facebooks', 'instagrams', 'linkedIns', 'twitters', 'tiktoks', 'youtubes', 'pinterests']) {
     const v = src[key];
     if (Array.isArray(v) && v.length) out.push(String(v[0]));
     else if (typeof v === 'string' && v.trim()) out.push(v.trim());
@@ -381,7 +390,7 @@ async function apiRequest(url, { method = 'GET', payload = null, timeoutMs = 600
  * signal while waiting. Starting + polling costs a few extra lines and removes
  * that whole class of failure.
  */
-async function startRun({ niche, location, max, token, signal }) {
+async function startRun({ niche, location, max, token, signal, contacts = false }) {
   const payload = {
     searchStringsArray: [niche],
     locationQuery: location,
@@ -392,6 +401,9 @@ async function startRun({ niche, location, max, token, signal }) {
     maxReviews: 0,          // keep the run cheap and fast
     maxImages: 0,
     maxQuestions: 0,
+    // Paid add-on: visits each business's own site and pulls emails and social
+    // profiles. Off unless asked for — it is charged per place.
+    ...(contacts ? { scrapeContacts: true } : {}),
   };
   const url = `${API_ROOT}/acts/${ACTOR}/runs?token=${encodeURIComponent(token)}`;
   const resp = await apiRequest(url, { method: 'POST', payload, signal });
@@ -459,9 +471,10 @@ async function fetchItems(datasetId, token, { signal }) {
  * @param {(msg: string) => void} [opts.onProgress]  human-readable log lines.
  * @param {AbortSignal} [opts.signal]
  * @param {boolean} [opts.yes]     confirm a run of more than 50 places.
+ * @param {boolean} [opts.contacts] paid add-on: emails and social profiles.
  */
 export async function search({
-  niche, location, max = 15, token, onProgress, signal, yes = false,
+  niche, location, max = 15, token, onProgress, signal, yes = false, contacts = false,
 } = {}) {
   const log = makeLogger(onProgress);
 
@@ -501,7 +514,7 @@ export async function search({
 
   // Cost guard. Cheap, but on the free tier the monthly credit is small enough
   // that an accidental 3-digit run is worth one confirmation.
-  const est = maxPlaces * USD_PER_PLACE;
+  const est = estimateUsd(maxPlaces, contacts);
   if (maxPlaces > 50 && !yes) {
     throw new ApifyError(
       `About to scrape up to ${maxPlaces} places (~$${est.toFixed(2)}). `
@@ -509,10 +522,10 @@ export async function search({
     );
   }
 
-  log(`Searching Apify for: ${q} in ${where} (max ${maxPlaces}, est ~$${est.toFixed(2)})`);
+  log(`Searching Apify for: ${q} in ${where} (max ${maxPlaces}, est ~${est.toFixed(2)}${contacts ? ', with contact enrichment' : ''})`);
 
   const { runId, datasetId } = await startRun({
-    niche: q, location: where, max: maxPlaces, token: apiToken, signal,
+    niche: q, location: where, max: maxPlaces, token: apiToken, signal, contacts,
   });
   log(`  started run ${runId}`);
 
