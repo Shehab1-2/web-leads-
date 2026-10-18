@@ -105,7 +105,7 @@ export const api = {
 // ---------------------------------------------------------------- routes
 
 const ROUTES = [
-  { re: /^\/$/, view: 'overview', args: () => ({}) },
+  { re: /^\/$/, view: 'dashboard', args: () => ({}) },
   { re: /^\/search$/, view: 'search', args: () => ({}) },
   { re: /^\/add$/, view: 'addlead', args: () => ({}) },
   { re: /^\/checking\/(.+)$/, view: 'checking', args: (m) => ({ slug: dec(m[1]) }) },
@@ -202,61 +202,135 @@ function stageStrip(currentKey) {
 
 // ------------------------------------------------------------------- nav
 
-function topLink(hash, label, { count = null } = {}) {
-  // "/" must match exactly; everything else matches its whole subtree so a
-  // detail screen still highlights the section it belongs to.
+// Sidebar sections, in order. The four pipeline stages are NOT here: they
+// belong to a run, and repeating them globally is what made two competing
+// navigations — the stage strip still owns that job, inside the content area.
+const NAV_ITEMS = [
+  { hash: '#/', label: 'Dashboard', iconName: 'grid', exact: true },
+  { hash: 'calllist', label: 'Call List', iconName: 'phone' },
+  { hash: '#/runs', label: 'Searches', iconName: 'list', count: () => state.runs.length || null },
+  { hash: '#/history', label: 'History', iconName: 'clock', count: () => state.historyCount || null },
+  { hash: '#/data', label: 'Data', iconName: 'database' },
+  { hash: '#/settings', label: 'Settings', iconName: 'sliders' },
+];
+
+function sideLink(hash, label, iconName, { count = null, exact = false } = {}) {
   const here = location.hash || '#/';
-  const active = hash === '#/' ? (here === '#/' || here === '') : here.startsWith(hash);
+  const active = exact ? (here === hash || (hash === '#/' && here === '')) : here.startsWith(hash);
   return h('a', {
-    class: 'top__link',
+    class: 'side__link',
     href: hash,
     ...(active ? { 'aria-current': 'page' } : {}),
   },
-    h('span', { text: label }),
-    count ? h('span', { class: 'top__count tnum', text: String(count) }) : null);
+    h('span', { class: 'side__link-icon' }, icon(iconName, { size: 16, width: 1.8 })),
+    h('span', { class: 'side__link-label', text: label }),
+    count ? h('span', { class: 'side__count tnum', text: String(count) }) : null);
 }
+
+// ---------------------------------------------------------------- theming
+
+const THEME_KEY = 'web-leads-theme';
+
+function getTheme() {
+  try {
+    const t = localStorage.getItem(THEME_KEY);
+    return t === 'light' || t === 'dark' ? t : 'system';
+  } catch { return 'system'; }
+}
+
+function setTheme(mode) {
+  if (mode === 'system') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', mode);
+  try {
+    if (mode === 'system') localStorage.removeItem(THEME_KEY);
+    else localStorage.setItem(THEME_KEY, mode);
+  } catch { /* persistence is best-effort; the toggle still works this session */ }
+  renderNav();
+}
+
+function themeToggle() {
+  const current = getTheme();
+  const opt = (mode, iconName, label) => h('button', {
+    type: 'button',
+    class: 'theme-toggle__btn',
+    title: label,
+    'aria-label': label,
+    'aria-pressed': current === mode ? 'true' : 'false',
+    onClick: () => setTheme(mode),
+  }, icon(iconName, { size: 14, width: 1.8 }));
+  return h('div', { class: 'theme-toggle', role: 'group', 'aria-label': 'Theme' },
+    opt('light', 'sun', 'Light'),
+    opt('dark', 'moon', 'Dark'),
+    opt('system', 'laptop', 'Match system'));
+}
+
+// Mobile: the nav list collapses into a drawer below the sidebar's own
+// breakpoint; a hamburger button toggles it open/closed per render.
+let navOpen = false;
 
 function renderNav() {
   const nav = document.getElementById('nav');
   if (!nav) return;
   clear(nav);
+  nav.dataset.open = navOpen ? 'true' : 'false';
 
-  const inner = h('div', { class: 'top__inner' });
-  inner.appendChild(h('a', { class: 'top__mark', href: '#/', text: 'web-leads' }));
+  nav.appendChild(h('button', {
+    type: 'button',
+    class: 'side__burger',
+    'aria-label': navOpen ? 'Close menu' : 'Open menu',
+    'aria-expanded': navOpen ? 'true' : 'false',
+    onClick: () => { navOpen = !navOpen; renderNav(); },
+  }, icon('menu', { size: 18, width: 1.9 })));
 
-  // Grouped by what you are doing, not by what the data is called. The four
-  // pipeline stages are NOT here: they belong to a run, and repeating them
-  // globally is what made two competing navigations.
+  nav.appendChild(h('a', { class: 'side__mark', href: '#/', text: 'web-leads' }));
+
+  // "New search" and "Add a lead" are actions, not destinations — pinned
+  // above the nav list rather than competing with it as a 7th/8th item.
+  nav.appendChild(h('div', { class: 'side__actions' },
+    h('a', { class: 'btn btn--primary btn--sm', href: '#/search' },
+      icon('plus', { size: 13, stroke: 'var(--accent-ink)', width: 2.2 }), 'New search'),
+    h('a', { class: 'btn btn--quiet btn--sm', href: '#/add' },
+      icon('plus', { size: 13, width: 2.2 }), 'Add a lead')));
+
   const r = state.activeRun;
-  const links = h('div', { class: 'top__links' },
-    topLink('#/', 'Overview'),
-    r ? topLink(`#/leads/${encodeURIComponent(r.slug)}`, 'Call list', { count: r.toCall || null }) : null,
-    topLink('#/search', 'New search'),
-    topLink('#/data', 'Data'),
-    topLink('#/runs', 'Searches', { count: state.runs.length || null }),
-    topLink('#/history', 'History', { count: state.historyCount || null }),
-    topLink('#/settings', 'Settings'));
-  inner.appendChild(links);
+  const links = h('div', { class: 'side__links' });
+  for (const item of NAV_ITEMS) {
+    if (item.hash === 'calllist') {
+      // No active run yet: still present, routes somewhere sensible (start
+      // one) rather than disappearing — one less nav item to explain away.
+      links.appendChild(r
+        ? sideLink(`#/leads/${encodeURIComponent(r.slug)}`, item.label, item.iconName, { count: r.toCall || null })
+        : sideLink('#/search', item.label, item.iconName));
+      continue;
+    }
+    links.appendChild(sideLink(item.hash, item.label, item.iconName, {
+      count: item.count ? item.count() : null,
+      exact: Boolean(item.exact),
+    }));
+  }
+  nav.appendChild(links);
 
-  const right = h('div', { class: 'top__right' });
   // A running job stays visible from every screen, not just the one that
   // started it.
   for (const label of jobs.values()) {
-    right.appendChild(h('div', { class: 'top__job' },
+    nav.appendChild(h('div', { class: 'side__job' },
       icon('spinner', { size: 12, cls: 'spin', width: 2.2 }),
       h('span', { text: label })));
   }
+
+  // The run being worked, visible from every screen so you always know which
+  // list an action lands in.
   if (r) {
-    right.appendChild(h('a', {
-      class: 'top__run',
+    nav.appendChild(h('a', {
+      class: 'side__run',
       href: `#/runs`,
       title: `${r.niche || r.slug} — ${r.location || ''}`,
     },
       icon('pin', { size: 12, stroke: 'var(--ink-4)' }),
-      h('span', { class: 'top__run-name', text: r.niche || r.slug })));
+      h('span', { class: 'side__run-name', text: r.niche || r.slug })));
   }
-  inner.appendChild(right);
-  nav.appendChild(inner);
+
+  nav.appendChild(h('div', { class: 'side__foot' }, themeToggle()));
 }
 
 // ---------------------------------------------------------------- render
@@ -273,6 +347,9 @@ async function render() {
 
   if (current?.destroy) { try { current.destroy(); } catch { /* view teardown is best-effort */ } }
   current = null;
+
+  // A navigation is the signal that the drawer's job is done, on mobile.
+  navOpen = false;
 
   // Counts in the nav and strip must reflect what just happened (an outcome
   // logged, a check finished), so state is refreshed on every navigation.

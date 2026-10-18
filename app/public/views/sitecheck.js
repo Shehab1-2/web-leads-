@@ -84,7 +84,7 @@ function openOutcomeMenu(anchor, current, onPick) {
       statusDot(status),
       h('span', { text: STATUS_LABEL[status] }),
       status === current
-        ? h('span', { style: { marginLeft: 'auto', display: 'inline-flex' } }, icon('check', { size: 13, stroke: '#8d8577' }))
+        ? h('span', { style: { marginLeft: 'auto', display: 'inline-flex' } }, icon('check', { size: 13, stroke: '#8A869E' }))
         : null)));
 
   document.body.appendChild(el);
@@ -182,7 +182,7 @@ function backLink(ctx) {
       display: 'inline-flex', alignItems: 'center', gap: '9px',
       fontSize: '13px', fontWeight: '500', color: 'var(--ink-2)',
     },
-  }, icon('arrowLeft', { size: 15, stroke: '#8d8577' }), 'Back to call list');
+  }, icon('arrowLeft', { size: 15, stroke: '#8A869E' }), 'Back to call list');
 }
 
 // -------------------------------------------------------------- screen
@@ -210,7 +210,7 @@ function screen(lead, all, runMeta, ctx) {
       cursor: target ? 'pointer' : 'default',
     },
     onClick: () => { if (target) goTo(target); },
-  }, icon(name, { size: 15, stroke: target ? '#5c564a' : '#cfc6b4', width: 2 }));
+  }, icon(name, { size: 15, stroke: target ? '#4B4860' : '#D3D0E0', width: 2 }));
 
   view.appendChild(h('div', {
     style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '40px' },
@@ -282,7 +282,7 @@ function leftColumn(lead, check, tier, slug) {
       justifyContent: 'center', gap: '13px', padding: '0 40px',
     },
   },
-    icon('eyeOff', { size: 28, stroke: '#bcb2a0', width: 1.6 }),
+    icon('eyeOff', { size: 28, stroke: '#ABA7C0', width: 1.6 }),
     h('div', { class: 'empty__title', style: { marginTop: '0', fontSize: '14.5px' }, text: shot.title }),
     h('p', { class: 'empty__body', style: { marginTop: '0', maxWidth: '215px' }, text: shot.body }),
     shot.link
@@ -299,7 +299,7 @@ function leftColumn(lead, check, tier, slug) {
         display: 'flex', alignItems: 'center', gap: '9px', marginTop: '15px',
         fontFamily: 'var(--mono)', fontSize: '12.5px', color: 'var(--ink-2)',
       },
-    }, h('span', { text: prettyHost(url) }), icon('external', { size: 12, stroke: '#a89f8e', width: 2 })));
+    }, h('span', { text: prettyHost(url) }), icon('external', { size: 12, stroke: '#8A869E', width: 2 })));
   } else {
     col.appendChild(h('div', {
       style: { marginTop: '15px', fontSize: '13px', color: 'var(--ink-3)' },
@@ -310,12 +310,12 @@ function leftColumn(lead, check, tier, slug) {
   if (check && check.https === false) {
     col.appendChild(h('span', {
       class: 'pill',
-      style: { marginTop: '10px', background: '#f0ddd3', color: '#8a3a1c' },
+      style: { marginTop: '10px', background: '#F3D9A8', color: '#B45309' },
       text: 'http:// — not secure',
     }));
   } else if (check && check.https === true) {
     col.appendChild(h('span', { class: 'status', style: { marginTop: '10px' } },
-      icon('check', { size: 11, stroke: '#8d8577', width: 2.4 }),
+      icon('check', { size: 11, stroke: '#8A869E', width: 2.4 }),
       h('span', { text: 'Serves over https' })));
   }
 
@@ -395,7 +395,7 @@ function rightColumn(lead, check, tier, runMeta, ctx) {
           body: 'The check ran but stored no signal list, so the tier below rests on the load result alone.',
         };
     col.appendChild(h('div', { class: 'empty', style: { marginTop: '16px' } },
-      icon('info', { size: 20, stroke: '#bcb2a0', width: 1.8 }),
+      icon('info', { size: 20, stroke: '#ABA7C0', width: 1.8 }),
       h('div', { class: 'empty__title', text: state.title }),
       h('p', {
         class: 'empty__body',
@@ -468,7 +468,7 @@ function rightColumn(lead, check, tier, runMeta, ctx) {
       : h('span', {
         class: 'btn btn--quiet',
         style: { height: '48px', color: 'var(--ink-3)', cursor: 'default' },
-      }, icon('phoneOff', { size: 16, stroke: '#c4bba9', width: 1.8 }), 'No phone listed'),
+      }, icon('phoneOff', { size: 16, stroke: '#ABA7C0', width: 1.8 }), 'No phone listed'),
     h('button', {
       class: 'btn btn--quiet',
       type: 'button',
@@ -547,10 +547,10 @@ function groupHeading(text, marginTop) {
 function signalRow(signal) {
   const notChecked = signal.found === null || signal.found === undefined;
   const mark = signal.found === true
-    ? icon('check', { size: 16, stroke: '#1d1a15', width: 2.4 })
+    ? icon('check', { size: 16, stroke: '#0E0F13', width: 2.4 })
     : notChecked
-      ? icon('dash', { size: 16, stroke: '#cfc6b4', width: 2 })
-      : icon('circle', { size: 16, stroke: '#c9c0ae', width: 2 });
+      ? icon('dash', { size: 16, stroke: '#D3D0E0', width: 2 })
+      : icon('circle', { size: 16, stroke: '#CFCBE0', width: 2 });
   mark.style.marginTop = '2px';
 
   const label = signal.label || signal.id || 'Signal';
@@ -559,7 +559,7 @@ function signalRow(signal) {
   const body = signal.found === true
     ? h('div', { style: { fontSize: '14px', lineHeight: '1.55' } },
       h('span', { style: { fontWeight: '600' }, text: label }),
-      evidence ? h('span', { style: { color: '#6b6558' }, text: ` — ${evidence}` }) : null)
+      evidence ? h('span', { style: { color: '#4B4860' }, text: ` — ${evidence}` }) : null)
     : h('div', {
       style: { fontSize: '14px', lineHeight: '1.55', color: notChecked ? 'var(--ink-5)' : 'var(--ink-4)' },
     },
@@ -625,7 +625,7 @@ function factsRow(lead, check, pulledDate) {
       target: '_blank',
       rel: 'noopener noreferrer',
       style: { display: 'inline-flex', alignItems: 'center', gap: '7px' },
-    }, 'Open in Google Maps', icon('external', { size: 12, stroke: '#a89f8e', width: 2 }))
+    }, 'Open in Google Maps', icon('external', { size: 12, stroke: '#8A869E', width: 2 }))
     : h('span', { style: { color: 'var(--ink-4)' }, text: 'No Maps link recorded' })));
 
   // seen_leads carries a per-business first_seen; the run CSV does not, so this
@@ -667,7 +667,7 @@ function mountChip(slot, lead, ctx) {
   },
     statusDot(status),
     h('span', { text: status ? STATUS_LABEL[status] : 'Not called' }),
-    icon('chevronDown', { size: 10, stroke: '#b3aa98', width: 2.6 }));
+    icon('chevronDown', { size: 10, stroke: '#ABA7C0', width: 2.6 }));
   slot.appendChild(chipEl);
 }
 

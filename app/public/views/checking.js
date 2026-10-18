@@ -165,7 +165,7 @@ export async function render(root, ctx) {
 
   sideCol.appendChild(h('div', { class: 'note', style: { marginTop: '26px' } },
     h('div', { class: 'note__title' },
-      icon('info', { size: 14, stroke: '#8a4a24', width: 2 }),
+      icon('info', { size: 14, stroke: '#B45309', width: 2 }),
       h('span', { text: 'No browser in this session' })),
     h('p', {
       class: 'note__body',
@@ -204,7 +204,7 @@ export async function render(root, ctx) {
     ctaRow.style.display = 'flex';
     ctaRow.appendChild(h('a', { class: 'btn btn--primary', href: `#/leads/${enc}` },
       h('span', { text: 'See the call list' }),
-      icon('arrowRight', { size: 15, stroke: '#fdf4ef' })));
+      icon('arrowRight', { size: 15, stroke: '#FFFFFF' })));
     const again = h('button', { class: 'btn btn--quiet btn--sm', type: 'button', text: 'Run the checks again' });
     again.addEventListener('click', () => { ctaRow.style.display = 'none'; runChecks(true); });
     ctaRow.appendChild(again);
@@ -354,7 +354,7 @@ export async function render(root, ctx) {
 function buildRow(row, index, total) {
   const iconSlot = h('span', { style: { flexShrink: '0', display: 'flex' } });
   const title = h('div', { class: 'mono', style: { fontSize: '13.5px' }, text: row.display });
-  const sub = h('div', { style: { marginTop: '4px', fontSize: '13px', lineHeight: '1.5', color: '#6b6558' } });
+  const sub = h('div', { style: { marginTop: '4px', fontSize: '13px', lineHeight: '1.5', color: '#4B4860' } });
   const note = h('div', { style: { marginTop: '6px', fontSize: '12.5px', lineHeight: '1.5', color: 'var(--accent)' } });
   const side = h('span', { style: { flexShrink: '0', display: 'flex' } });
   const el = h('div', {
@@ -380,9 +380,9 @@ function applyRow(row) {
   if (row.state === 'queued') {
     Object.assign(row.el.style, { alignItems: 'center', padding: '13px 0', margin: '0', background: 'transparent' });
     iconSlot.style.marginTop = '0';
-    iconSlot.appendChild(icon('circle', { size: 16, stroke: '#d5ccba', width: 2 }));
+    iconSlot.appendChild(icon('circle', { size: 16, stroke: '#D3D0E0', width: 2 }));
     title.style.color = 'var(--ink-5)';
-    side.appendChild(h('span', { style: { fontSize: '12.5px', color: '#c4bba9' }, text: 'Queued' }));
+    side.appendChild(h('span', { style: { fontSize: '12.5px', color: '#ABA7C0' }, text: 'Queued' }));
     return;
   }
 
@@ -392,7 +392,7 @@ function applyRow(row) {
 
   if (row.state === 'checking') {
     Object.assign(row.el.style, { padding: '14px 18px', margin: '0 -18px', background: 'var(--tint)' });
-    iconSlot.appendChild(icon('spinner', { size: 16, stroke: '#a83a1e', width: 2.2, cls: 'spin' }));
+    iconSlot.appendChild(icon('spinner', { size: 16, stroke: '#4F46C4', width: 2.2, cls: 'spin' }));
     sub.style.display = 'block';
     sub.textContent = row.activity || 'Reading the homepage source…';
     if (row.note) { note.style.display = 'block'; note.textContent = row.note; }
@@ -407,15 +407,15 @@ function applyRow(row) {
   Object.assign(row.el.style, { padding: '13px 0', margin: '0', background: 'transparent' });
 
   if (row.state === 'failed') {
-    iconSlot.appendChild(icon('alert', { size: 16, stroke: '#a89f8e', width: 2 }));
+    iconSlot.appendChild(icon('alert', { size: 16, stroke: '#8A869E', width: 2 }));
     sub.style.display = 'block';
     sub.textContent = row.activity || 'Not checked.';
-    side.appendChild(h('span', { style: { fontSize: '12.5px', color: '#c4bba9', marginTop: '2px' }, text: 'Not checked' }));
+    side.appendChild(h('span', { style: { fontSize: '12.5px', color: '#ABA7C0', marginTop: '2px' }, text: 'Not checked' }));
     return;
   }
 
   // done
-  iconSlot.appendChild(icon('check', { size: 16, stroke: '#1d1a15', width: 2.4 }));
+  iconSlot.appendChild(icon('check', { size: 16, stroke: '#0E0F13', width: 2.4 }));
   const tier = row.check && row.check.tier ? row.check.tier : 'needs_check';
   const reason = row.check && row.check.reason ? row.check.reason : '';
   if (reason) { sub.style.display = 'block'; sub.textContent = reason; }
@@ -472,14 +472,14 @@ function emptyState(leads, noWebsite, slug) {
   }
   return h('div', { style: { maxWidth: '620px' } },
     h('div', { class: 'empty' },
-      icon('check', { size: 18, stroke: '#b3aa98' }),
+      icon('check', { size: 18, stroke: '#ABA7C0' }),
       h('div', { class: 'empty__title', text: 'No sites need checking' }),
       h('div', { class: 'empty__body', style: { maxWidth: '420px', margin: '7px auto 0' }, text: body })),
     h('a', {
       class: 'btn btn--primary',
       style: { marginTop: '26px' },
       href: `#/leads/${encodeURIComponent(slug)}`,
-    }, h('span', { text: 'See the call list' }), icon('arrowRight', { size: 15, stroke: '#fdf4ef' })));
+    }, h('span', { text: 'See the call list' }), icon('arrowRight', { size: 15, stroke: '#FFFFFF' })));
 }
 
 // ----------------------------------------------------------------- utils

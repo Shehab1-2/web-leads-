@@ -6,10 +6,19 @@
   <title>web-leads</title>
   <link rel="stylesheet" href="./design.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='19' font-size='19'%3E%F0%9F%93%9E%3C/text%3E%3C/svg%3E">
+  <script>
+    // Applied before first paint so an explicit choice never flashes the
+    // wrong theme. Absence of the attribute means "system" — the CSS media
+    // query carries that case on its own.
+    try {
+      var t = localStorage.getItem('web-leads-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { /* storage may be unavailable; system default still applies */ }
+  </script>
 </head>
 <body>
   <div class="shell">
-    <header class="top" id="nav"></header>
+    <aside class="side" id="nav"></aside>
     <main class="view" id="view"></main>
   </div>
   <script type="module" src="./app.js"></script>

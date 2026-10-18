@@ -151,7 +151,7 @@ export async function render(root, ctx) {
         text: 'What each run cost, what it found, and what it turned into — so the next trade you pick is not a guess.',
       })),
     h('a', { class: 'btn btn--primary', href: '#/search' },
-      icon('plus', { size: 15, stroke: '#fdf4ef', width: 2 }),
+      icon('plus', { size: 15, stroke: '#FFFFFF', width: 2 }),
       h('span', { text: 'New search' }))));
 
   const bodySlot = h('div', { style: { marginTop: '36px' } });
@@ -363,7 +363,7 @@ function runDetail(row, rows, ctx, select) {
 
   if (!row.loaded) {
     left.appendChild(h('div', { class: 'empty', style: { marginTop: '18px' } },
-      icon('alert', { size: 20, stroke: '#bcb2a0', width: 1.7 }),
+      icon('alert', { size: 20, stroke: '#ABA7C0', width: 1.7 }),
       h('div', { class: 'empty__title', text: 'This run did not load' }),
       h('p', {
         class: 'empty__body',
@@ -443,7 +443,7 @@ function bar(b, total) {
       width: `${pct}%`,
       height: '16px',
       borderRadius: '2px',
-      ...(b.tier === 'not_a_lead' ? { borderStyle: 'dashed', borderColor: '#cfc6b4' } : {}),
+      ...(b.tier === 'not_a_lead' ? { borderStyle: 'dashed', borderColor: '#D3D0E0' } : {}),
     },
   });
   return h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px', padding: '8px 0' } },
@@ -493,7 +493,7 @@ function outcomesCard(row) {
       text: String(tally.called),
     }),
     h('span', {
-      style: { fontSize: '13.5px', color: '#6b6558' },
+      style: { fontSize: '13.5px', color: '#4B4860' },
       text: leadCount ? `of ${leadCount} called so far` : 'calls logged',
     })));
 
@@ -630,14 +630,14 @@ function comparisonEmpty(runCount) {
     [26, 44, 34, 56].map((height, i) => h('span', {
       style: {
         width: '14px', height: `${height}px`, borderRadius: '2px',
-        background: ['#e9e3d7', '#e2dacb', '#e9e3d7', '#ddd4c4'][i],
+        background: ['#E8E7F0', '#E0DEED', '#E8E7F0', '#D6D3E6'][i],
       },
     })));
 
   return h('div', {
     style: {
       display: 'flex', alignItems: 'center', gap: '26px', marginTop: '40px',
-      padding: '26px 30px', border: '1px dashed #d8cfbd', borderRadius: '6px',
+      padding: '26px 30px', border: '1px dashed #D3D0E0', borderRadius: '6px',
     },
   }, glyph,
     h('div', {},
@@ -668,7 +668,7 @@ function loadingBlock() {
 function errorBlock(err, retry) {
   return h('div', {},
     h('div', { class: 'empty' },
-      icon('alert', { size: 22, stroke: '#bcb2a0', width: 1.7 }),
+      icon('alert', { size: 22, stroke: '#ABA7C0', width: 1.7 }),
       h('div', { class: 'empty__title', text: 'The list of searches did not load' }),
       h('p', {
         class: 'empty__body',
@@ -683,7 +683,7 @@ function errorBlock(err, retry) {
 function noRunsBlock() {
   return h('div', {},
     h('div', { class: 'empty' },
-      icon('search', { size: 22, stroke: '#bcb2a0', width: 1.7 }),
+      icon('search', { size: 22, stroke: '#ABA7C0', width: 1.7 }),
       h('div', { class: 'empty__title', text: 'No searches yet' }),
       h('p', {
         class: 'empty__body',
@@ -692,6 +692,6 @@ function noRunsBlock() {
           + 'costs about two cents of the Apify free credit.',
       })),
     h('a', { class: 'btn btn--primary', style: { marginTop: '26px' }, href: '#/search' },
-      icon('plus', { size: 15, stroke: '#fdf4ef', width: 2 }),
+      icon('plus', { size: 15, stroke: '#FFFFFF', width: 2 }),
       h('span', { text: 'New search' })));
 }

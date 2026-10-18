@@ -262,7 +262,7 @@ function header(s) {
       gap: '40px', padding: '22px 70px', borderBottom: '1px solid var(--rule)',
     },
   },
-  h('div', { style: { fontSize: '13px', color: '#6b6558', minWidth: '0' } },
+  h('div', { style: { fontSize: '13px', color: '#4B4860', minWidth: '0' } },
     where.length ? metaLine(...where) : h('span', { text: s.slug })),
 
   h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },

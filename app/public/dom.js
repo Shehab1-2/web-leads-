@@ -96,6 +96,14 @@ const PATHS = {
   spinner: ['M12 4a8 8 0 0 1 8 8'],
   noAnswer: ['M6.6 12h10.8'],
   list: ['M8 6h13', 'M8 12h13', 'M8 18h13', 'M3.5 6h.01', 'M3.5 12h.01', 'M3.5 18h.01'],
+  grid: ['M4 4h7v7H4z', 'M13 4h7v7h-7z', 'M4 13h7v7H4z', 'M13 13h7v7h-7z'],
+  database: ['M4 6c0-1.1 3.6-2 8-2s8 .9 8 2-3.6 2-8 2-8-.9-8-2z', 'M4 6v6c0 1.1 3.6 2 8 2s8-.9 8-2V6', 'M4 12v6c0 1.1 3.6 2 8 2s8-.9 8-2v-6'],
+  clock: ['M12 7v5l3.5 2'],
+  sliders: ['M4 6h10', 'M18 6h2', 'M4 12h4', 'M12 12h8', 'M4 18h14', 'M22 18h-2'],
+  menu: ['M4 6h16', 'M4 12h16', 'M4 18h16'],
+  sun: ['M12 4v2', 'M12 18v2', 'M4 12h2', 'M18 12h2', 'M6.3 6.3l1.4 1.4', 'M16.3 16.3l1.4 1.4', 'M6.3 17.7l1.4-1.4', 'M16.3 7.7l1.4-1.4'],
+  moon: ['M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z'],
+  laptop: ['M5 5.5c0-.6.4-1 1-1h12c.6 0 1 .4 1 1v9H5z', 'M2.5 18.5h19', 'M9.5 18.5l1-2h3l1 2'],
 };
 
 const CIRCLES = {
@@ -106,6 +114,7 @@ const CIRCLES = {
   circle: [[12, 12, 8]],
   dot: [[12, 12, 7, true]],
   noAnswer: [[12, 12, 8]],
+  clock: [[12, 12, 9]],
 };
 
 // ---------------------------------------------------------- formatting
@@ -146,10 +155,10 @@ export const STATUS_LABEL = {
 
 /** The dot that shows call state at a glance down the list. */
 export function statusDot(status) {
-  if (status === 'interested') return icon('dot', { size: 10, stroke: '#2a251d' });
-  if (status === 'no_answer' || status === 'call_back') return icon('noAnswer', { size: 10, stroke: '#8d8577', width: 2 });
-  if (status === 'not_interested') return icon('x', { size: 10, stroke: '#a89f8e', width: 2.2 });
-  return icon('circle', { size: 10, stroke: '#c4bba9', width: 2 });
+  if (status === 'interested') return icon('dot', { size: 10, stroke: '#17141F' });
+  if (status === 'no_answer' || status === 'call_back') return icon('noAnswer', { size: 10, stroke: '#8A869E', width: 2 });
+  if (status === 'not_interested') return icon('x', { size: 10, stroke: '#8A869E', width: 2.2 });
+  return icon('circle', { size: 10, stroke: '#ABA7C0', width: 2 });
 }
 
 export function meta(...parts) {
@@ -165,7 +174,7 @@ export function ratingBits(lead) {
   if (lead.rating === null || lead.rating === undefined || lead.rating === '') return [];
   return [
     h('span', { class: 'tnum', style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } },
-      icon('star', { size: 11, stroke: '#8d8577' }), String(lead.rating)),
+      icon('star', { size: 11, stroke: '#8A869E' }), String(lead.rating)),
     lead.reviews ? h('span', { style: { color: 'var(--ink-4)' }, text: plural(lead.reviews, 'review', 'reviews') }) : null,
   ].filter(Boolean);
 }

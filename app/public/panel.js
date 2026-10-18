@@ -7,12 +7,12 @@
 import { h, clear, icon, prettyHost, STATUS_LABEL, statusDot, plural } from './dom.js';
 
 const CSS = `
-.pnl__back { position: fixed; inset: 0; background: rgba(29,26,21,0.28); z-index: 40; opacity: 0; transition: opacity 140ms ease; }
+.pnl__back { position: fixed; inset: 0; background: rgba(14,15,19,0.28); z-index: 40; opacity: 0; transition: opacity 140ms ease; }
 .pnl__back--in { opacity: 1; }
 .pnl { position: fixed; top: 0; right: 0; bottom: 0; width: 520px; max-width: 94vw; background: var(--surface); border-left: 1px solid var(--rule); z-index: 41; overflow-y: auto; transform: translateX(14px); opacity: 0; transition: transform 150ms ease, opacity 150ms ease; }
 .pnl--in { transform: none; opacity: 1; }
 .pnl__head { position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--rule-soft); padding: 18px 22px 14px; display: flex; align-items: flex-start; gap: 14px; }
-.pnl__title { font-family: var(--serif); font-size: 21px; line-height: 1.2; color: var(--ink); }
+.pnl__title { font-family: var(--serif); font-weight: 800; font-size: 21px; line-height: 1.2; color: var(--ink); }
 .pnl__sub { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
 .pnl__x { margin-left: auto; border: 0; background: transparent; cursor: pointer; padding: 4px; color: var(--ink-3); display: flex; }
 .pnl__x:hover { color: var(--ink); }

@@ -191,7 +191,7 @@ function screen(data, ctx, s) {
 
   if (!total) {
     left.appendChild(h('div', { class: 'empty', style: { marginTop: '16px' } },
-      icon('list', { size: 22, stroke: '#bcb2a0', width: 1.7 }),
+      icon('list', { size: 22, stroke: '#ABA7C0', width: 1.7 }),
       h('div', { class: 'empty__title', text: 'This run has no leads in it' }),
       h('p', {
         class: 'empty__body',
@@ -267,14 +267,14 @@ function screen(data, ctx, s) {
     class: 'btn btn--dark',
     style: { marginTop: '16px', width: '100%' },
     disabled: true,
-  }, icon('mail', { size: 15, stroke: '#faf7f1', width: 1.9 }), h('span', { text: 'Add leads to the campaign' }));
+  }, icon('mail', { size: 15, stroke: '#F6F5F9', width: 1.9 }), h('span', { text: 'Add leads to the campaign' }));
 
   right.appendChild(h('div', { class: 'eyebrow', text: 'Campaign' }));
   right.appendChild(campaignCard(ctx, pushBtn, pushHint));
 
   right.appendChild(h('div', { class: 'eyebrow', style: { marginTop: '30px' }, text: 'Results' }));
   right.appendChild(h('div', { class: 'empty', style: { marginTop: '14px' } },
-    icon('mail', { size: 26, stroke: '#bcb2a0', width: 1.5 }),
+    icon('mail', { size: 26, stroke: '#ABA7C0', width: 1.5 }),
     h('div', { class: 'empty__title', text: 'Nothing sent yet' }),
     h('p', { class: 'empty__body', text: 'Sent, opened and replied counts appear here once the campaign starts.' })));
 
@@ -286,13 +286,13 @@ function screen(data, ctx, s) {
         icon('chevronRight', { size: 11, stroke: 'var(--ink-4)', width: 2.2 })),
       h('span', { class: 'eyebrow', text: 'Before the first send' })),
     h('div', { class: 'panel', style: { marginTop: '12px' } },
-      h('p', { style: { fontSize: '12.5px', lineHeight: '1.65', color: '#6b6558' } },
+      h('p', { style: { fontSize: '12.5px', lineHeight: '1.65', color: '#4B4860' } },
         'Replies land in Instantly’s inbox, not here. When one comes in, mark the lead ',
         h('span', { style: { fontWeight: '600' }, text: 'Interested' }),
         ' on the call list so both halves stay in step.')),
     h('div', { class: 'note', style: { marginTop: '12px' } },
       h('div', { class: 'note__title' },
-        icon('alert', { size: 14, stroke: '#8a4a24', width: 2 }),
+        icon('alert', { size: 14, stroke: '#B45309', width: 2 }),
         h('span', { text: 'Before the first send' })),
       h('p', {
         class: 'note__body',
@@ -325,7 +325,7 @@ function screen(data, ctx, s) {
     rowRefs.clear();
     if (!emailable.length) {
       listEl.appendChild(h('div', { class: 'empty' },
-        icon('eyeOff', { size: 22, stroke: '#bcb2a0', width: 1.7 }),
+        icon('eyeOff', { size: 22, stroke: '#ABA7C0', width: 1.7 }),
         h('div', { class: 'empty__title', text: 'No site to read an address off' }),
         h('p', {
           class: 'empty__body',
@@ -375,7 +375,7 @@ function screen(data, ctx, s) {
 
   // ------------------------------------------------------------ the scan
   const scanBtn = h('button', { type: 'button', class: 'btn btn--primary' },
-    icon('search', { size: 15, stroke: '#fdf4ef', width: 2 }),
+    icon('search', { size: 15, stroke: '#FFFFFF', width: 2 }),
     h('span', { text: '' }));
 
   function paintScanBtn() {
@@ -520,7 +520,7 @@ function leadRow(lead, isFirst, isSelected, onPick) {
       background: isSelected ? 'var(--ink)' : 'var(--surface)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     },
-  }, isSelected ? icon('check', { size: 10, stroke: '#faf7f1', width: 3 }) : null);
+  }, isSelected ? icon('check', { size: 10, stroke: '#F6F5F9', width: 3 }) : null);
 
   const tier = effectiveTier(lead);
   const el = h('button', {
@@ -550,7 +550,7 @@ function leadRow(lead, isFirst, isSelected, onPick) {
     clear(stateCell);
     if (scanning) {
       stateCell.appendChild(h('span', { style: { display: 'flex', alignItems: 'center', gap: '7px', color: 'var(--ink-2)' } },
-        icon('spinner', { size: 13, stroke: '#a83a1e', width: 2.2, cls: 'spin' }),
+        icon('spinner', { size: 13, stroke: '#4F46C4', width: 2.2, cls: 'spin' }),
         h('span', { text: 'Reading…' })));
       return;
     }
@@ -666,7 +666,7 @@ function firstStep(lead, draft, emailableCount) {
 
 /** Steps 2 and 3 — collapsed, and honest about not being written yet. */
 function laterStep(step) {
-  const chev = icon('chevronDown', { size: 12, stroke: '#b3aa98', width: 2.6 });
+  const chev = icon('chevronDown', { size: 12, stroke: '#ABA7C0', width: 2.6 });
   const panel = h('div', {
     style: {
       display: 'none', padding: '0 20px 16px', fontSize: '13px',
@@ -775,7 +775,7 @@ function loadingBlock() {
 function errorBlock(err, retry) {
   return h('div', {},
     h('div', { class: 'empty' },
-      icon('alert', { size: 22, stroke: '#bcb2a0', width: 1.7 }),
+      icon('alert', { size: 22, stroke: '#ABA7C0', width: 1.7 }),
       h('div', { class: 'empty__title', text: 'The email view did not load' }),
       h('p', { class: 'empty__body', style: { maxWidth: '440px', margin: '7px auto 0' }, text: msgOf(err) })),
     h('div', { style: { display: 'flex', gap: '12px', marginTop: '22px' } },

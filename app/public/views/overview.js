@@ -86,7 +86,7 @@ export async function render(root, ctx) {
   // ------------------------------------------------------- nothing yet
   if (!run) {
     wrap.appendChild(h('div', { class: 'empty', style: { marginTop: '40px' } },
-      icon('search', { size: 22, stroke: '#bcb2a0', width: 1.7 }),
+      icon('search', { size: 22, stroke: '#ABA7C0', width: 1.7 }),
       h('div', { class: 'empty__title', text: 'No searches yet' }),
       h('p', {
         class: 'empty__body',

@@ -102,7 +102,7 @@ export async function render(root, ctx) {
 
   if (!rows.length) {
     body.appendChild(h('div', { class: 'empty', style: { marginTop: '34px' } },
-      icon('list', { size: 20, stroke: '#bcb2a0', width: 1.7 }),
+      icon('list', { size: 20, stroke: '#ABA7C0', width: 1.7 }),
       h('div', { class: 'empty__title', text: 'Nothing scraped yet' }),
       h('p', { class: 'empty__body', text: 'Run a search and every business it finds will show up here.' }),
       h('a', { class: 'btn btn--primary', style: { marginTop: '18px' }, href: '#/search' }, 'Start a search')));

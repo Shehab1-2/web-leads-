@@ -104,7 +104,7 @@ export async function render(root, ctx) {
         position: 'absolute', right: '16px', top: '50%',
         transform: 'translateY(-50%)', display: 'flex', pointerEvents: 'none',
       },
-    }, icon('pin', { size: 16, stroke: '#b3aa98', width: 1.7 })));
+    }, icon('pin', { size: 16, stroke: '#ABA7C0', width: 1.7 })));
 
   // Max results stepper + live cost estimate.
   const stepValue = h('div', {
@@ -114,9 +114,9 @@ export async function render(root, ctx) {
     text: String(form.max),
   });
   const stepDown = h('button', { type: 'button', 'aria-label': 'Fewer results' },
-    icon('minus', { size: 14, stroke: '#8d8577', width: 2 }));
+    icon('minus', { size: 14, stroke: '#8A869E', width: 2 }));
   const stepUp = h('button', { type: 'button', 'aria-label': 'More results' },
-    icon('plus', { size: 14, stroke: '#1d1a15', width: 2 }));
+    icon('plus', { size: 14, stroke: '#0E0F13', width: 2 }));
   const costLine = h('div', {
     class: 'tnum',
     style: { fontSize: '15px', color: 'var(--ink)' },
@@ -201,7 +201,7 @@ export async function render(root, ctx) {
   // Submit row, or the token explanation in its place.
   const runLabel = h('span', { text: 'Run search' });
   const runIcon = h('span', { style: { display: 'flex' } },
-    icon('search', { size: 16, stroke: '#fdf4ef', width: 2 }));
+    icon('search', { size: 16, stroke: '#FFFFFF', width: 2 }));
   const runBtn = h('button', { class: 'btn btn--primary btn--lg', type: 'submit' }, runIcon, runLabel);
 
   // Sits above the button and only appears for a run big enough to be worth
@@ -295,7 +295,7 @@ export async function render(root, ctx) {
     } else {
       logEyebrow.textContent = 'Run log';
       logSlot.appendChild(h('div', { class: 'empty' },
-        icon('list', { size: 18, stroke: '#b3aa98' }),
+        icon('list', { size: 18, stroke: '#ABA7C0' }),
         h('div', { class: 'empty__title', text: 'Nothing has been searched yet' }),
         h('div', {
           class: 'empty__body',
@@ -430,8 +430,8 @@ export async function render(root, ctx) {
     runBtn.disabled = busy;
     clear(runIcon);
     runIcon.appendChild(busy
-      ? icon('spinner', { size: 16, stroke: '#fdf4ef', width: 2.2, cls: 'spin' })
-      : icon('search', { size: 16, stroke: '#fdf4ef', width: 2 }));
+      ? icon('spinner', { size: 16, stroke: '#FFFFFF', width: 2.2, cls: 'spin' })
+      : icon('search', { size: 16, stroke: '#FFFFFF', width: 2 }));
     runLabel.textContent = busy ? 'Searching…' : 'Run search';
   }
 
@@ -528,7 +528,7 @@ function lastRunCard(run) {
 function tokenNote() {
   return h('div', { class: 'note', style: { maxWidth: '588px' } },
     h('div', { class: 'note__title' },
-      icon('alert', { size: 14, stroke: '#8a4a24', width: 2 }),
+      icon('alert', { size: 14, stroke: '#B45309', width: 2 }),
       h('span', { text: 'APIFY_API_TOKEN is not set' })),
     h('p', {
       class: 'note__body',

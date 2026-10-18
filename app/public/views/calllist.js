@@ -102,7 +102,7 @@ function openOutcomeMenu(anchor, current, onPick) {
       statusDot(status),
       h('span', { text: STATUS_LABEL[status] }),
       status === current
-        ? h('span', { style: { marginLeft: 'auto', display: 'inline-flex' } }, icon('check', { size: 13, stroke: '#8d8577' }))
+        ? h('span', { style: { marginLeft: 'auto', display: 'inline-flex' } }, icon('check', { size: 13, stroke: '#8A869E' }))
         : null)));
 
   document.body.appendChild(el);
@@ -136,7 +136,7 @@ function statusChip(status, onClick) {
   },
     statusDot(status),
     h('span', { text: set ? STATUS_LABEL[status] : 'Not called' }),
-    icon('chevronDown', { size: 9, stroke: '#b3aa98', width: 2.6 }));
+    icon('chevronDown', { size: 9, stroke: '#ABA7C0', width: 2.6 }));
 }
 
 // ------------------------------------------------------------- render
@@ -217,6 +217,7 @@ function screen(data, ctx) {
   let filter = 'all';
   let query = '';
   let sortBy = 'rank'; // rank | reviews | name
+  const selected = new Set(); // place_id of rows checked for a bulk action
 
   // ------------------------------------------------------------ header
   view.appendChild(h('div', {
@@ -312,16 +313,32 @@ function screen(data, ctx) {
     onClick: () => exportCsv(),
   }, icon('download', { size: 13 }), 'Export CSV');
 
+  // Select-all sits with the chips: it is the header for the list the chips
+  // already filter, so checking it only ever touches what is on screen.
+  const selectAllEl = h('input', {
+    type: 'checkbox',
+    class: 'lead__checkbox',
+    'aria-label': 'Select all visible leads',
+    onChange: (e) => toggleSelectAll(e.target.checked),
+  });
+
   if (callable.length) {
     view.appendChild(h('div', {
       style: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         gap: '32px', marginTop: '34px', paddingBottom: '22px', flexWrap: 'wrap',
       },
-    }, chipRow,
+    }, h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' } },
+      selectAllEl, chipRow),
       h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' } },
         summaryEl, searchEl, sortEl, exportBtn)));
   }
+
+  // Appears only once 1+ rows are checked — bulk action on the selection,
+  // modelled on the single-row outcome menu already in this file, just
+  // looped over every selected lead.
+  const bulkBarEl = h('div', {});
+  view.appendChild(bulkBarEl);
 
   const rowsEl = h('div', { style: callable.length ? null : { marginTop: '34px' } });
   view.appendChild(rowsEl);
@@ -374,6 +391,11 @@ function screen(data, ctx) {
     }, label, h('span', { class: 'chip__count tnum', text: String(count) }));
   }
 
+  // What select-all means: the leads currently on screen with filter, search
+  // and sort applied — same scope exportCsv already uses, so "select all"
+  // and "export" never disagree about what "all" means.
+  let currentlyVisible = [];
+
   function paintRows() {
     clear(rowsEl);
     closeMenu();
@@ -381,6 +403,8 @@ function screen(data, ctx) {
     if (!all.length) {
       rowsEl.appendChild(emptyBlock('search', 'This run has no rows',
         'The CSV for this search is empty. Run the search again, or pick another one from Searches.'));
+      currentlyVisible = [];
+      paintSelectAll();
       return;
     }
     if (!callable.length) {
@@ -388,6 +412,8 @@ function screen(data, ctx) {
         dropped.length
           ? `Every site that was checked came back healthy — ${dropped.length} of them, listed below. Padding the list with those is what makes it stop being trusted.`
           : 'No row in this run has reached a lead tier yet. Check the sites first, then this list fills in.'));
+      currentlyVisible = [];
+      paintSelectAll();
       return;
     }
 
@@ -401,18 +427,96 @@ function screen(data, ctx) {
     } else if (sortBy === 'name') {
       visible = [...visible].sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
     }
+    currentlyVisible = visible;
     if (!visible.length) {
       rowsEl.appendChild(query
         ? emptyBlock('search', `Nothing matches “${query}”`,
           'No lead name, street, category or opener contains that. Clear the search to see the list again.')
         : emptyBlock('list', `No leads in ${TIER_LABEL[filter] || filter}`,
           'Nothing in this run scored that tier. Clear the filter to see the whole call order.'));
+      paintSelectAll();
       return;
     }
 
     visible.forEach((lead, i) => {
       rowsEl.appendChild(leadRow(lead, rankOf.get(lead.place_id) || i + 1, i === visible.length - 1));
     });
+    paintSelectAll();
+  }
+
+  // -------------------------------------------------------- bulk selection
+
+  function paintSelectAll() {
+    const ids = currentlyVisible.map((l) => l.place_id);
+    const checkedCount = ids.filter((id) => selected.has(id)).length;
+    selectAllEl.checked = ids.length > 0 && checkedCount === ids.length;
+    selectAllEl.indeterminate = checkedCount > 0 && checkedCount < ids.length;
+    selectAllEl.disabled = ids.length === 0;
+  }
+
+  function toggleSelectAll(checked) {
+    for (const l of currentlyVisible) {
+      if (checked) selected.add(l.place_id);
+      else selected.delete(l.place_id);
+    }
+    paintSelectAll();
+    paintBulkBar();
+    repaintCheckboxes();
+  }
+
+  function toggleOne(placeId, checked) {
+    if (checked) selected.add(placeId);
+    else selected.delete(placeId);
+    paintSelectAll();
+    paintBulkBar();
+  }
+
+  function repaintCheckboxes() {
+    rowsEl.querySelectorAll('.lead__checkbox').forEach((cb) => {
+      cb.checked = selected.has(cb.dataset.placeId);
+    });
+  }
+
+  function paintBulkBar() {
+    clear(bulkBarEl);
+    if (!selected.size) return;
+    const bar = h('div', { class: 'bulkbar' },
+      h('span', { class: 'tnum', text: `${selected.size} selected` }),
+      h('div', { class: 'bulkbar__actions' },
+        ...OUTCOMES.map((status) => h('button', {
+          type: 'button',
+          class: 'btn btn--quiet btn--sm',
+          onClick: () => applyBulk(status),
+        }, statusDot(status), h('span', { text: STATUS_LABEL[status] }))),
+        h('button', {
+          type: 'button',
+          class: 'btn btn--quiet btn--sm',
+          onClick: () => { selected.clear(); paintSelectAll(); paintBulkBar(); repaintCheckboxes(); },
+        }, 'Clear')));
+    bulkBarEl.appendChild(bar);
+  }
+
+  async function applyBulk(status) {
+    const ids = [...selected];
+    let ok = 0;
+    let failed = 0;
+    for (const placeId of ids) {
+      try {
+        const res = await ctx.api.outcome({ place_id: placeId, status, note: '' });
+        statuses[placeId] = statusOf(res && res.status) || status;
+        ok += 1;
+      } catch {
+        failed += 1;
+      }
+    }
+    selected.clear();
+    paintBulkBar();
+    paintSummary();
+    paintRows();
+    if (ok) ctx.toast(`${ok} ${ok === 1 ? 'lead' : 'leads'} marked ${STATUS_LABEL[status] || status}${failed ? ` — ${failed} failed` : ''}`,
+      failed ? 'err' : 'ok');
+    else ctx.toast(`Could not update any of the ${ids.length} selected leads`, 'err');
+    ctx.refresh().catch(() => { /* nav counts are cosmetic; the outcomes are saved */ });
   }
 
   /** The working list as a file — what is on screen right now (filter, search
@@ -469,6 +573,17 @@ function screen(data, ctx) {
       },
     });
 
+    const checkbox = h('input', {
+      type: 'checkbox',
+      class: 'lead__checkbox',
+      dataset: { placeId: lead.place_id },
+      checked: selected.has(lead.place_id),
+      'aria-label': `Select ${lead.name || 'this lead'}`,
+      onClick: (e) => e.stopPropagation(),
+      onChange: (e) => toggleOne(lead.place_id, e.target.checked),
+    });
+    row.appendChild(h('div', { class: 'lead__check' }, checkbox));
+
     row.appendChild(h('div', { class: 'lead__rank', text: String(rank) }));
 
     const street = streetOf(lead, runMeta.location);
@@ -493,7 +608,7 @@ function screen(data, ctx) {
       lead.phone
         ? h('div', { class: 'lead__phone tnum', text: lead.phone })
         : h('div', { class: 'lead__nophone' },
-          icon('phoneOff', { size: 14, stroke: '#c4bba9', width: 1.8 }),
+          icon('phoneOff', { size: 14, stroke: '#ABA7C0', width: 1.8 }),
           'No phone listed'),
       chipSlot,
       // A note written in call mode surfaces here, so what they said is one
@@ -502,7 +617,7 @@ function screen(data, ctx) {
         ? h('div', {
           class: 'serif',
           style: {
-            fontSize: '13.5px', fontStyle: 'italic', color: 'var(--ink-3)',
+            fontSize: '13.5px', color: 'var(--ink-3)',
             maxWidth: '230px', textAlign: 'right', lineHeight: '1.5',
           },
           text: `“${lead.outcome.note}”`,
@@ -555,7 +670,7 @@ function screen(data, ctx) {
 
 function emptyBlock(iconName, title, body) {
   return h('div', { class: 'empty', style: { marginTop: '8px' } },
-    icon(iconName, { size: 22, stroke: '#bcb2a0', width: 1.7 }),
+    icon(iconName, { size: 22, stroke: '#ABA7C0', width: 1.7 }),
     h('div', { class: 'empty__title', text: title }),
     h('p', { class: 'empty__body', style: { maxWidth: '460px', margin: '7px auto 0' }, text: body }));
 }
@@ -577,7 +692,7 @@ function footer(dropped, checkedLeads, all) {
 
   const left = h('div', { style: { flex: '1', minWidth: '320px' } },
     h('div', { class: 'eyebrow', text: 'Dropped — not leads' }));
-  const body = { fontSize: '13.5px', lineHeight: '1.75', color: '#6b6558', maxWidth: '460px' };
+  const body = { fontSize: '13.5px', lineHeight: '1.75', color: '#4B4860', maxWidth: '460px' };
 
   if (dropped.length) {
     const list = h('div', { style: { marginTop: '10px', ...body } });
