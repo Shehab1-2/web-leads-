@@ -9,7 +9,7 @@
 // deliberately rather than fetched.
 
 import {
-  h, clear, icon, meta as metaRow, ratingBits, statusDot,
+  h, clear, icon, statusDot, plural,
   STATUS_LABEL, fmtDate,
 } from '../dom.js';
 
@@ -313,8 +313,10 @@ function screen(data, ctx) {
     onClick: () => exportCsv(),
   }, icon('download', { size: 13 }), 'Export CSV');
 
-  // Select-all sits with the chips: it is the header for the list the chips
-  // already filter, so checking it only ever touches what is on screen.
+  // Lives in the table header below, not here — it is the header for the
+  // rows the chips filter, so checking it only ever touches what is on
+  // screen; declared early because paintSelectAll()/toggleSelectAll() below
+  // reference it regardless of where it ends up mounted.
   const selectAllEl = h('input', {
     type: 'checkbox',
     class: 'lead__checkbox',
@@ -326,10 +328,9 @@ function screen(data, ctx) {
     view.appendChild(h('div', {
       style: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        gap: '32px', marginTop: '34px', paddingBottom: '22px', flexWrap: 'wrap',
+        gap: '32px', marginTop: '34px', paddingBottom: '14px', flexWrap: 'wrap',
       },
-    }, h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' } },
-      selectAllEl, chipRow),
+    }, chipRow,
       h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' } },
         summaryEl, searchEl, sortEl, exportBtn)));
   }
@@ -339,6 +340,17 @@ function screen(data, ctx) {
   // looped over every selected lead.
   const bulkBarEl = h('div', {});
   view.appendChild(bulkBarEl);
+
+  if (callable.length) {
+    view.appendChild(h('div', { class: 'lead lead__head' },
+      h('div', { class: 'lead__check' }, selectAllEl),
+      h('div', { class: 'lead__rank' }),
+      h('div', { class: 'lead__main' }, h('span', { text: 'Lead' })),
+      h('div', { class: 'lead__col lead__col--phone' }, h('span', { text: 'Phone' })),
+      h('div', { class: 'lead__col lead__col--status' }, h('span', { text: 'Status' })),
+      h('div', { class: 'lead__col lead__col--match' }, h('span', { text: 'Rating' })),
+      h('div', { class: 'lead__col lead__col--stage' }, h('span', { text: 'Stage' }))));
+  }
 
   const rowsEl = h('div', { style: callable.length ? null : { marginTop: '34px' } });
   view.appendChild(rowsEl);
@@ -548,6 +560,14 @@ function screen(data, ctx) {
     ctx.toast(`Exported ${rows.length} ${rows.length === 1 ? 'lead' : 'leads'}`);
   }
 
+  /**
+   * One line per lead — row-leading rank chip, name/company, street, a
+   * truncated opener (full text lives in the panel, not the row), tier as its
+   * own column, rating as a "match" chip, status as the existing dropdown
+   * pill. No note preview or bare phone column: the row stays scannable,
+   * and the phone number — still the thing a caller needs fastest — sits
+   * right next to the status pill rather than requiring a fourth column.
+   */
   function leadRow(lead, rank, isLast) {
     const tier = effectiveTier(lead);
     const status = statuses[lead.place_id] || null;
@@ -584,49 +604,44 @@ function screen(data, ctx) {
     });
     row.appendChild(h('div', { class: 'lead__check' }, checkbox));
 
-    row.appendChild(h('div', { class: 'lead__rank', text: String(rank) }));
+    row.appendChild(h('div', { class: `lead__rank${rank === 1 ? ' lead__rank--top' : ''} tnum`, text: String(rank) }));
 
     const street = streetOf(lead, runMeta.location);
-    const bits = ratingBits(lead);
     row.appendChild(h('div', { class: 'lead__main' },
       h('div', { class: 'lead__meta' },
-        metaRow(h('span', { class: 'lead__name', text: lead.name || 'Unnamed business' }),
-          lead.category || null,
-          street || null),
-        bits.length ? [h('span', { class: 'dot-sep', text: '·' }), bits] : null),
-      lead.reason
-        ? h('p', { class: 'lead__opener', text: lead.reason })
-        : h('p', {
-          class: 'lead__opener',
-          style: { color: 'var(--ink-4)', fontStyle: 'italic' },
-          text: 'No opener line was written for this row.',
-        })));
+        h('span', { class: 'lead__name', text: lead.name || 'Unnamed business' }),
+        h('span', { class: 'lead__company', text: [lead.category, street].filter(Boolean).join(' · ') })),
+      h('p', {
+        class: 'lead__opener-line',
+        title: lead.reason || '',
+        text: lead.reason || 'No opener line was written for this row.',
+      })));
 
-    const chipSlot = h('div', { style: { display: 'flex' } });
-    const side = h('div', { class: 'lead__side' },
-      h('span', { class: `pill pill--${tier || 'needs_check'}`, text: TIER_LABEL[tier] || tier || 'Unknown' }),
+    row.appendChild(h('div', { class: 'lead__col lead__col--phone' },
       lead.phone
-        ? h('div', { class: 'lead__phone tnum', text: lead.phone })
-        : h('div', { class: 'lead__nophone' },
-          icon('phoneOff', { size: 14, stroke: '#ABA7C0', width: 1.8 }),
-          'No phone listed'),
-      chipSlot,
-      // A note written in call mode surfaces here, so what they said is one
-      // glance away next time the list is worked.
-      lead.outcome && lead.outcome.note
-        ? h('div', {
-          class: 'serif',
-          style: {
-            fontSize: '13.5px', color: 'var(--ink-3)',
-            maxWidth: '230px', textAlign: 'right', lineHeight: '1.5',
-          },
-          text: `“${lead.outcome.note}”`,
-        })
-        : null);
-    row.appendChild(side);
+        ? h('span', { class: 'tnum', text: lead.phone })
+        : h('span', { class: 'lead__dash' }, icon('phoneOff', { size: 13, stroke: 'currentColor', width: 1.8 }))));
+
+    const chipSlot = h('div', { class: 'lead__col lead__col--status' });
+    row.appendChild(chipSlot);
+
+    row.appendChild(h('div', { class: 'lead__col lead__col--match' }, ratingChip(lead)));
+
+    row.appendChild(h('div', { class: 'lead__col lead__col--stage' },
+      h('span', { class: `pill pill--sm pill--${tier || 'needs_check'}`, text: TIER_LABEL[tier] || tier || 'Unknown' })));
 
     mountChip(chipSlot, lead, row);
     return row;
+  }
+
+  /** Review rating as a small colored chip — this app's closest equivalent to
+   *  an AI match score: the one number, outside the tier itself, worth
+   *  scanning a column for. Unrated leads show a dash, never a fabricated 0. */
+  function ratingChip(lead) {
+    const rating = lead.rating === null || lead.rating === undefined || lead.rating === '' ? null : Number(lead.rating);
+    if (rating === null || Number.isNaN(rating)) return h('span', { class: 'lead__dash', text: '—' });
+    const tone = rating >= 4.5 ? 'hi' : rating >= 4 ? 'mid' : 'lo';
+    return h('span', { class: `ratingchip ratingchip--${tone} tnum`, title: lead.reviews ? plural(lead.reviews, 'review', 'reviews') : '', text: rating.toFixed(1) });
   }
 
   function mountChip(slot, lead, row) {

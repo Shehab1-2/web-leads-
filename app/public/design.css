@@ -379,11 +379,14 @@ a.side__run:hover { border-color: var(--ink-5); text-decoration: none; }
 
 /* ------------------------------------------------------------ lead rows */
 
+/* One line per lead — row-leading checkbox and rank chip, name/company and a
+   truncated opener in the flexible main column, then fixed-width columns
+   (phone, status, rating, stage) that line up under the header row below. */
 .lead {
   display: flex;
-  gap: 26px;
-  align-items: flex-start;
-  padding: 16px 16px;
+  gap: 14px;
+  align-items: center;
+  padding: 7px 16px;
   margin: 0 -16px;
   border-top: 1px solid var(--rule-soft);
   text-align: left;
@@ -393,91 +396,127 @@ a.side__run:hover { border-color: var(--ink-5); text-decoration: none; }
 .lead:hover { background: rgba(14, 15, 19, 0.02); }
 .lead--handled { background: var(--tint); }
 .lead--handled:hover { background: #E7E5F0; }
+.lead--top { box-shadow: inset 2px 0 0 var(--accent); }
+
+.lead__head {
+  cursor: default;
+  padding-top: 0;
+  padding-bottom: 9px;
+  border-top: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.lead__head:hover { background: transparent; }
+.lead__head .lead__main, .lead__head .lead__col { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; }
+
 .lead__check {
   display: flex;
   align-items: center;
-  height: 32px;
   flex-shrink: 0;
-  padding-top: 2px;
 }
 .lead__checkbox {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   accent-color: var(--accent);
   cursor: pointer;
 }
 .lead__rank {
-  width: 50px;
+  width: 22px;
   flex-shrink: 0;
-  text-align: right;
-  font-family: var(--serif);
-  font-weight: 800;
-  font-size: 32px;
-  line-height: 1.15;
-  color: #B9B6D1;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-4);
   font-variant-numeric: tabular-nums;
+  background: var(--tint);
+  border-radius: 99px;
+  line-height: 20px;
+  height: 20px;
 }
-.lead--top .lead__rank { color: var(--accent); }
-.lead--handled .lead__rank { color: var(--ink-6); }
-.lead__main { flex: 1; min-width: 0; }
+.lead__rank--top { color: var(--accent-ink); background: var(--accent); }
+.lead--handled .lead__rank:not(.lead__rank--top) { color: var(--ink-5); }
+
+.lead__main { flex: 1 1 340px; min-width: 0; }
 .lead__meta {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 7px;
-  font-size: 13px;
+  flex-direction: column;
+  min-width: 0;
+}
+.lead__name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lead__company {
+  font-size: 11.5px;
   color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  margin-top: 1px;
 }
-.lead__name { font-size: 14px; font-weight: 600; color: var(--ink); }
-.lead__opener {
-  margin-top: 9px;
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 1.55;
-  color: var(--ink-prose);
-  max-width: 620px;
-  text-wrap: pretty;
+.lead__opener-line {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--ink-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.lead__side {
-  width: 248px;
+
+.lead__col {
+  flex: 1;
+  min-width: 0;
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 9px;
-}
-.lead__phone {
-  font-family: var(--mono);
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--ink);
-  letter-spacing: -0.01em;
-}
-.lead__nophone {
-  display: flex;
   align-items: center;
-  gap: 7px;
-  height: 27px;
-  color: var(--ink-4);
-  font-size: 15px;
-  font-family: var(--serif);
 }
+.lead__col--phone { flex-basis: 128px; font-size: 12.5px; color: var(--ink-2); }
+.lead__col--status { flex-basis: 150px; }
+.lead__col--match { flex-basis: 64px; justify-content: center; }
+.lead__col--stage { flex-basis: 128px; }
+.lead__dash { color: var(--ink-5); display: inline-flex; align-items: center; }
 
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  height: 26px;
-  padding: 0 9px;
+  gap: 6px;
+  height: 24px;
+  padding: 0 8px;
   border: 1px solid var(--rule);
-  border-radius: 13px;
+  border-radius: 12px;
   background: var(--surface);
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--ink-3);
+  white-space: nowrap;
 }
 .status--set { border-color: #C7C3DA; color: var(--ink-2); font-weight: 500; }
 .status--interested { color: #17141F; }
+
+/* Review rating as a small colored chip — the closest thing this app has to
+   an AI match score: the one number, outside the tier pill itself, worth
+   scanning a column for. Same hi/mid/lo banding as RatingBadge elsewhere. */
+.ratingchip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.ratingchip--hi { background: #E8E6F8; color: #3B3270; }
+.ratingchip--mid { background: var(--warn-bg); color: var(--warn-ink); }
+.ratingchip--lo { background: var(--tint); color: var(--ink-3); }
 
 /* Bulk actions — appears above the list once 1+ rows are checked, modelled on
    a single toolbar rather than per-row chrome, so the count is the one thing
@@ -678,6 +717,17 @@ a.stage:hover { border-color: var(--ink-5); color: var(--ink-2); }
   .side[data-open='true'] .side__links { max-height: 60vh; margin-top: 12px; overflow-y: auto; }
   .side__foot { order: 9; width: auto; margin-top: 0; padding-top: 0; border-top: 0; margin-left: auto; }
   .view { padding: 24px 20px 56px; }
+
+  /* The dense table row has no room for five fixed-width columns on a phone
+     screen; only the header row carries real "which column is which"
+     information, so it is the one piece that gets to disappear entirely. */
+  .lead__head { display: none; }
+  .lead { flex-wrap: wrap; gap: 6px 10px; padding: 10px 14px; }
+  .lead__main { flex-basis: 100%; order: 1; }
+  .lead__col--phone { order: 2; flex-basis: auto; }
+  .lead__col--status { order: 3; flex-basis: auto; margin-left: auto; }
+  .lead__col--match { order: 4; flex-basis: auto; justify-content: flex-start; }
+  .lead__col--stage { order: 5; flex-basis: auto; }
 }
 
 /* ------------------------------------------------------------- folds */
@@ -802,6 +852,17 @@ a.stage:hover { border-color: var(--ink-5); color: var(--ink-2); }
 :root[data-theme="dark"] .pill--somewhat_dated { color: var(--pill-somewhat_dated-ink); }
 :root[data-theme="dark"] .pill--needs_check, :root[data-theme="dark"] .swatch--needs_check { background: var(--pill-needs_check-bg); }
 :root[data-theme="dark"] .pill--needs_check { color: var(--pill-needs_check-ink); }
+
+/* The rank chip, rating chip and "interested" status also used literal hex
+   tuned for the light ground. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .lead__rank--top { color: #0E0D16; }
+  :root:not([data-theme="light"]) .ratingchip--hi { background: #322D54; color: #D9D5F5; }
+  :root:not([data-theme="light"]) .status--interested { color: var(--ink); }
+}
+:root[data-theme="dark"] .lead__rank--top { color: #0E0D16; }
+:root[data-theme="dark"] .ratingchip--hi { background: #322D54; color: #D9D5F5; }
+:root[data-theme="dark"] .status--interested { color: var(--ink); }
 
 /* Skeleton shimmer and toast used literal hex tuned for the light ground;
    dark equivalents so loading states and toasts don't glare. */
