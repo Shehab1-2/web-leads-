@@ -203,6 +203,11 @@ function screen(data, ctx) {
     const t = effectiveTier(l);
     counts[t] = (counts[t] || 0) + 1;
   }
+  // Only a lead with a website can have a scraped email — the contacts
+  // add-on reads it off the site itself, not the Maps listing. Counted here
+  // rather than assumed from tier, since "has a site" and "no_website tier"
+  // are two different signals that usually but don't always agree.
+  const emailCount = callable.filter((l) => String(l.email || '').trim()).length;
   const rankOf = new Map(callable.map((l, i) => [l.place_id, i + 1]));
 
   // Local mirror of the call statuses so a saved outcome repaints without a
@@ -215,6 +220,10 @@ function screen(data, ctx) {
 
   const view = h('div', {});
   let filter = 'all';
+  // Orthogonal to the tier filter above — a lead can be any tier and still
+  // have (or lack) an email, so this is a second condition ANDed in, not
+  // another value `filter` could hold.
+  let emailOnly = false;
   let query = '';
   let sortBy = 'rank'; // rank | reviews | name
   const selected = new Set(); // place_id of rows checked for a bulk action
@@ -392,6 +401,10 @@ function screen(data, ctx) {
       if (!counts[tier]) continue;
       chipRow.appendChild(chip(tier, TIER_LABEL[tier], counts[tier]));
     }
+    if (emailCount) {
+      chipRow.appendChild(h('div', { style: { width: '1px', alignSelf: 'stretch', background: 'var(--rule)' } }));
+      chipRow.appendChild(emailChip());
+    }
   }
 
   function chip(value, label, count) {
@@ -401,6 +414,19 @@ function screen(data, ctx) {
       'aria-pressed': filter === value ? 'true' : 'false',
       onClick: () => { filter = value; paintChips(); paintRows(); },
     }, label, h('span', { class: 'chip__count tnum', text: String(count) }));
+  }
+
+  /** Separate from the tier chips above it — toggles rather than selects,
+   *  since "has an email" narrows whichever tier is already showing instead
+   *  of replacing it. */
+  function emailChip() {
+    return h('button', {
+      type: 'button',
+      class: 'chip',
+      'aria-pressed': emailOnly ? 'true' : 'false',
+      onClick: () => { emailOnly = !emailOnly; paintChips(); paintRows(); },
+    }, icon('mail', { size: 12, stroke: 'currentColor' }), 'Has email',
+      h('span', { class: 'chip__count tnum', text: String(emailCount) }));
   }
 
   // What select-all means: the leads currently on screen with filter, search
@@ -430,6 +456,7 @@ function screen(data, ctx) {
     }
 
     let visible = filter === 'all' ? callable : callable.filter((l) => effectiveTier(l) === filter);
+    if (emailOnly) visible = visible.filter((l) => String(l.email || '').trim());
     if (query) {
       visible = visible.filter((l) => [l.name, l.reason, l.address, l.category]
         .some((v) => String(v || '').toLowerCase().includes(query)));
